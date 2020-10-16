@@ -25,6 +25,7 @@ public class PartyFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        System.out.println("sad");
         return inflater.inflate(R.layout.fragment_party, container, false);
     }
 
