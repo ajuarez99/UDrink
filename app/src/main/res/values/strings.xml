@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">UDrink</string>
+    <string name="title_home">Home</string>
+    <string name="title_party">Party</string>
+    <string name="title_map">Map</string>
+    <string name="title_profile">Profile</string>
+</resources>
