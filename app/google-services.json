@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "17133288115",
+    "firebase_url": "https://udrink-c2e10.firebaseio.com",
+    "project_id": "udrink-c2e10",
+    "storage_bucket": "udrink-c2e10.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:17133288115:android:830a051d549ae09d4b4ec6",
+        "android_client_info": {
+          "package_name": "com.example.udrink"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "17133288115-gb1kadc0c2c5bf2qh3uh5b7e38ruc6k3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.udrink",
+            "certificate_hash": "f875450ace40b2b9f49c9cecbf373dedacdc2389"
+          }
+        },
+        {
+          "client_id": "17133288115-cn5brnt8tain2c5t9j2m29tlcje8l4r0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUdJELGV8gNjFuALIhFs_9raLsBLzs3YY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "17133288115-cn5brnt8tain2c5t9j2m29tlcje8l4r0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

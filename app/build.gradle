@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 30
@@ -35,6 +36,7 @@ dependencies {
 
     // Google
     implementation 'com.google.android.gms:play-services-auth:18.1.0'
+    implementation 'com.firebaseui:firebase-ui-auth:6.2.0'
 
     // Firebase
     implementation platform('com.google.firebase:firebase-bom:25.12.0')
