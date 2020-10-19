@@ -50,18 +50,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
         // Set click listeners
         mSignInButton.setOnClickListener(this);
-        // Choose authentication providers
-        List<AuthUI.IdpConfig> providers = Arrays.asList(
-                new AuthUI.IdpConfig.EmailBuilder().build(),
-                new AuthUI.IdpConfig.GoogleBuilder().build());
-
-    // Create and launch sign-in intent
-        startActivityForResult(
-                AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setAvailableProviders(providers)
-                        .build(),
-                RC_SIGN_IN);
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -70,6 +58,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 .build();
         mSignInClient = GoogleSignIn.getClient(this, gso);
 
+        // Initialize FirebaseAuth
     }
     @Override
     public void onClick(View v) {
