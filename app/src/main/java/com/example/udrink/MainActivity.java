@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
     private DatabaseReference mFirebaseDatabaseReference;
+    private static String uid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
         } else {
 
         }
+        mFirebaseUser.getUid()
     }
-
+    public static void getUid(String Uid){
+        uid = Uid;
+    }
 }
