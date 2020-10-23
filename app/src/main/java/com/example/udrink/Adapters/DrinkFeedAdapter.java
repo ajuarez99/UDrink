@@ -73,7 +73,7 @@ public class DrinkFeedAdapter extends RecyclerView.Adapter<DrinkFeedAdapter.View
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.beerName.setText(mDataset.get(position).getDrinkName());
-        holder.beerABV.setText(Integer.toString(mDataset.get(position).getBAC()));
+        holder.beerABV.setText(Integer.toString(mDataset.get(position).getABV()));
         holder.beerOunces.setText(Integer.toString(mDataset.get(position).getOunces()));
         holder.timeAgo.setText(mDataset.get(position).getDrankAt().toString());
 

@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
 
         }
-        mFirebaseUser.getUid()
+        mFirebaseUser.getUid();
     }
     public static void getUid(String Uid){
         uid = Uid;

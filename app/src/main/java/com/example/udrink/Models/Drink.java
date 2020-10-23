@@ -8,6 +8,7 @@ public class Drink {
     private Date DrankAt;
     private int BAC;
     private int Ounces;
+
     public Drink(String drinkName, Date drankAt, int BAC, int ounces) {
         DrinkName = drinkName;
         this.uid = uid;
@@ -39,11 +40,11 @@ public class Drink {
         DrankAt = drankAt;
     }
 
-    public int getBAC() {
+    public int getABV() {
         return BAC;
     }
 
-    public void setBAC(int BAC) {
+    public void setABV(int BAC) {
         this.BAC = BAC;
     }
 

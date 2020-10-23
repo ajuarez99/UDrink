@@ -11,6 +11,16 @@ public class Party {
     private String partyName;
     private Location currentLocation;
 
+    public Party(String partyName){
+        this.partyName = partyName;
+    }
+
+    public Party(List<User> users, String name, Location location) {
+        this.users = users;
+        partyName = name;
+        currentLocation = location;
+    }
+
     public int getPid() {
         return pid;
     }
@@ -41,5 +51,9 @@ public class Party {
 
     public void setCurrentLocation(Location currentLocation) {
         this.currentLocation = currentLocation;
+    }
+
+    public void addUser(User u){
+        users.add(u);
     }
 }
