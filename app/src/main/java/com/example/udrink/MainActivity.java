@@ -1,7 +1,9 @@
 package com.example.udrink;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 
 import com.example.udrink.ui.Login.SignInActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -20,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseUser mFirebaseUser;
     private DatabaseReference mFirebaseDatabaseReference;
     private static String uid;
+    public static final String UDRINK_SETTINGS = "udrink_settings";
+    public static final String UDRINK_UID = "uid";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +49,12 @@ public class MainActivity extends AppCompatActivity {
         } else {
 
         }
-        mFirebaseUser.getUid();
+        SharedPreferences settings = getSharedPreferences(UDRINK_SETTINGS, MODE_PRIVATE);
+        // Writing data to SharedPreferences
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(UDRINK_UID, mFirebaseUser.getUid());
+        editor.commit();
+
     }
     public static void getUid(String Uid){
         uid = Uid;
