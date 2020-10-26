@@ -7,6 +7,9 @@ public class User {
     private int feet;
     private int inches;
 
+    public User() {
+
+    }
     public User(String uid, String name, int weight, int feet, int inches) {
         this.uid = uid;
         this.name = name;
@@ -25,6 +28,7 @@ public class User {
         this.uid = uid;
         this.name = name;
     }
+
 
     public int getWeight() {
         return weight;
@@ -64,5 +68,13 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void copyUser(User copy){
+        this.uid = copy.getUid();
+        this.name = copy.getName();
+        this.weight = copy.getWeight();
+        this.feet = copy.getFeet();
+        this.inches = copy.getInches();
     }
 }
