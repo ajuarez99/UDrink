@@ -21,6 +21,11 @@ public class User {
         this.weight = weight;
     }
 
+    public User(String uid, String name) {
+        this.uid = uid;
+        this.name = name;
+    }
+
     public int getWeight() {
         return weight;
     }

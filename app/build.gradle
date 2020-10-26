@@ -11,6 +11,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -34,7 +35,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'com.google.android.material:material:1.1.0-alpha06'
-
+    implementation 'com.android.support:multidex:1.0.3'
     // Google
     implementation 'com.google.android.gms:play-services-auth:18.1.0'
     implementation 'com.firebaseui:firebase-ui-auth:6.2.0'
@@ -43,6 +44,9 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:25.12.0')
     implementation 'com.google.firebase:firebase-database'
     implementation 'com.google.firebase:firebase-storage'
+    // Declare the dependency for the Cloud Firestore library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation 'com.google.firebase:firebase-firestore'
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-analytics'
     // Firebase UI

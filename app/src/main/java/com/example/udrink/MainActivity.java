@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
+import com.example.udrink.Firebase.FirebaseUsersUtil;
+import com.example.udrink.Firebase.FirebaseUtil;
 import com.example.udrink.ui.Login.SignInActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -54,7 +56,8 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = settings.edit();
         editor.putString(UDRINK_UID, mFirebaseUser.getUid());
         editor.commit();
-
+        FirebaseUsersUtil firebaseUtil = new FirebaseUsersUtil();
+        firebaseUtil.writeNewUser(mFirebaseUser.getUid(),"Allan Juarez");
     }
     public static void getUid(String Uid){
         uid = Uid;
