@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         editor.putString(UDRINK_UID, mFirebaseUser.getUid());
         editor.commit();
         FirebaseUsersUtil firebaseUtil = new FirebaseUsersUtil();
-        firebaseUtil.writeNewUser(mFirebaseUser.getUid(),"Allan Juarez");
+     //   firebaseUtil.writeNewUser(mFirebaseUser.getUid(),"Allan Juarez");
     }
     public static void getUid(String Uid){
         uid = Uid;
