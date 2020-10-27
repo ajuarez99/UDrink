@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         editor.commit();
         FirebaseUsersUtil firebaseUtil = new FirebaseUsersUtil();
 
-        User currentUser = new User(mFirebaseUser.getUid(),"Allan Juarez");
+        User currentUser = new User(mFirebaseUser.getUid(),mFirebaseUser.getDisplayName());
         if(firebaseUtil.findUserById(mFirebaseUser.getUid()) == null)
             firebaseUtil.writeNewUser(currentUser);
     }
