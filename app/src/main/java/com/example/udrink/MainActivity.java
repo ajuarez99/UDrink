@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 
 import com.example.udrink.Firebase.FirebaseUsersUtil;
 import com.example.udrink.Firebase.FirebaseUtil;
+import com.example.udrink.Models.User;
 import com.example.udrink.ui.Login.SignInActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -57,7 +58,10 @@ public class MainActivity extends AppCompatActivity {
         editor.putString(UDRINK_UID, mFirebaseUser.getUid());
         editor.commit();
         FirebaseUsersUtil firebaseUtil = new FirebaseUsersUtil();
-     //   firebaseUtil.writeNewUser(mFirebaseUser.getUid(),"Allan Juarez");
+
+        User currentUser = new User(mFirebaseUser.getUid(),"Allan Juarez");
+        if(firebaseUtil.findUserById(mFirebaseUser.getUid()) == null)
+            firebaseUtil.writeNewUser(currentUser);
     }
     public static void getUid(String Uid){
         uid = Uid;
