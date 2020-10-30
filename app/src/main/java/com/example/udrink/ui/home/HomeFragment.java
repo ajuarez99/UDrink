@@ -140,7 +140,7 @@ public class HomeFragment extends Fragment {
     }
     private void setDrinkFeed(){
         Query query = FirebaseFirestore.getInstance()
-                .collection("drinks").whereEqualTo("uid", uid)
+                .collection("drinks").whereEqualTo("uid", uid).orderBy("drankAt", Query.Direction.DESCENDING)
                 .limit(100);
 
         FirestoreRecyclerOptions<Drink> options = new FirestoreRecyclerOptions.Builder<Drink>()
