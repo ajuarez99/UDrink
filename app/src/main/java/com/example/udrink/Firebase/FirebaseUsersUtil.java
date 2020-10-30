@@ -27,7 +27,8 @@ public class FirebaseUsersUtil {
         db = FirebaseFirestore.getInstance();
     }
 
-    public void writeNewUser(User user) {
+    public void writeNewUser(String name , String uid) {
+        User user = new User(uid,name);
         db.collection("users").document(user.getUid()).set(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -43,12 +44,15 @@ public class FirebaseUsersUtil {
                 });
     }
 
-    public User findUserById(String uid) {
+    public void findUserById(String uid, final FireStoreUserCallback fireStoreUserCallback) {
         final User userReturn = new User();
         db.collection("users").document(uid).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if(documentSnapshot.toObject(User.class) == null){
+                            fireStoreUserCallback.newUserCallBack(documentSnapshot);
+                        }
                         userReturn.copyUser(documentSnapshot.toObject(User.class));
                     }
                 })
@@ -58,8 +62,10 @@ public class FirebaseUsersUtil {
                         Log.w(TAG, "Error adding document", e);
                     }
                 });
-        return userReturn;
 
+    }
 
+    public interface FireStoreUserCallback{
+        void newUserCallBack(DocumentSnapshot user);
     }
 }

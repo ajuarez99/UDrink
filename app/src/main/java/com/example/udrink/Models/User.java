@@ -1,15 +1,35 @@
 package com.example.udrink.Models;
 
+import java.util.List;
+
 public class User {
     private String uid;
     private String name;
     private int weight;
     private int feet;
     private int inches;
-
+    private List<User> friends;
+    private List<Drink> drinks;
     public User() {
 
     }
+
+    public List<User> getFriends() {
+        return friends;
+    }
+
+    public void setFriends(List<User> friends) {
+        this.friends = friends;
+    }
+
+    public List<Drink> getDrinks() {
+        return drinks;
+    }
+
+    public void setDrinks(List<Drink> drinks) {
+        this.drinks = drinks;
+    }
+
     public User(String uid, String name, int weight, int feet, int inches) {
         this.uid = uid;
         this.name = name;
@@ -71,10 +91,13 @@ public class User {
     }
 
     public void copyUser(User copy){
-        this.uid = copy.getUid();
-        this.name = copy.getName();
-        this.weight = copy.getWeight();
-        this.feet = copy.getFeet();
-        this.inches = copy.getInches();
+        if(copy != null){
+            this.uid = copy.getUid();
+            this.name = copy.getName();
+            this.weight = copy.getWeight();
+            this.feet = copy.getFeet();
+            this.inches = copy.getInches();
+        }
+
     }
 }

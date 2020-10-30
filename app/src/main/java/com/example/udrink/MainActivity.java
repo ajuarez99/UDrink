@@ -13,6 +13,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -57,13 +58,18 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = settings.edit();
         editor.putString(UDRINK_UID, mFirebaseUser.getUid());
         editor.commit();
-        FirebaseUsersUtil firebaseUtil = new FirebaseUsersUtil();
+        final FirebaseUsersUtil firebaseUtil = new FirebaseUsersUtil();
 
-        User currentUser = new User(mFirebaseUser.getUid(),mFirebaseUser.getDisplayName());
-        if(firebaseUtil.findUserById(mFirebaseUser.getUid()) == null)
-            firebaseUtil.writeNewUser(currentUser);
+        firebaseUtil.findUserById(mFirebaseUser.getUid(),new FirebaseUsersUtil.FireStoreUserCallback(){
+            @Override
+            public void newUserCallBack(DocumentSnapshot user) {
+                firebaseUtil.writeNewUser(mFirebaseUser.getDisplayName(), mFirebaseUser.getUid());
+            }
+        });
+
+
     }
-    public static void getUid(String Uid){
-        uid = Uid;
-    }
+
+
+
 }
