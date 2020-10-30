@@ -65,6 +65,10 @@ public class MainActivity extends AppCompatActivity {
             public void newUserCallBack(DocumentSnapshot user) {
                 firebaseUtil.writeNewUser(mFirebaseUser.getDisplayName(), mFirebaseUser.getUid());
             }
+            @Override
+            public void getUserCallback(DocumentSnapshot user) {
+
+            }
         });
 
 

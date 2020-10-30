@@ -2,6 +2,7 @@ package com.example.udrink.ui.home;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.udrink.Adapters.DrinkFeedAdapter;
+import com.example.udrink.Firebase.FirebaseUsersUtil;
 import com.example.udrink.Models.Drink;
 import com.example.udrink.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -28,18 +30,24 @@ import com.google.android.material.snackbar.Snackbar;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static android.content.Context.MODE_PRIVATE;
+import static com.example.udrink.MainActivity.UDRINK_SETTINGS;
+import static com.example.udrink.MainActivity.UDRINK_UID;
+
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
     private static RecyclerView recyclerView;
     private static RecyclerView.Adapter mAdapter;
     private static RecyclerView.LayoutManager layoutManager;
-
+    private static String uid;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
+        SharedPreferences settings = getActivity().getSharedPreferences(UDRINK_SETTINGS, MODE_PRIVATE);
 
+       uid = settings.getString(UDRINK_UID, "");
         /*
         Set up the recycler view for the home feed on drinks
          */
@@ -86,7 +94,10 @@ public class HomeFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
                         Date date = new Date(System.currentTimeMillis());
-                        Drink drink = new Drink(inputBeer.toString(),date,Integer.getInteger(inputBAC.toString()), Integer.getInteger(inputOunces.toString()));
+                        Drink drink = new Drink(inputBeer.getText().toString(),date,Integer.parseInt(inputBAC.getText().toString()), Integer.parseInt(inputOunces.getText().toString()));
+
+                        final FirebaseUsersUtil firebaseUtil = new FirebaseUsersUtil();
+                        firebaseUtil.addDrinkToUser(uid, drink);
 
                     }
                 });

@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.udrink.Models.Drink;
 import com.example.udrink.Models.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -13,6 +14,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import static android.service.controls.ControlsProviderService.TAG;
@@ -43,7 +45,9 @@ public class FirebaseUsersUtil {
                     }
                 });
     }
-
+    public void addDrinkToUser(String uid, Drink drink){
+            db.collection("users").document(uid).update("drinks", FieldValue.arrayUnion(drink));
+    }
     public void findUserById(String uid, final FireStoreUserCallback fireStoreUserCallback) {
         final User userReturn = new User();
         db.collection("users").document(uid).get()
@@ -53,7 +57,9 @@ public class FirebaseUsersUtil {
                         if(documentSnapshot.toObject(User.class) == null){
                             fireStoreUserCallback.newUserCallBack(documentSnapshot);
                         }
-                        userReturn.copyUser(documentSnapshot.toObject(User.class));
+                        else {
+                            fireStoreUserCallback.getUserCallback(documentSnapshot);
+                        }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -67,5 +73,6 @@ public class FirebaseUsersUtil {
 
     public interface FireStoreUserCallback{
         void newUserCallBack(DocumentSnapshot user);
+        void getUserCallback(DocumentSnapshot user);
     }
 }
