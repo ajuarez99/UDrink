@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Drink {
     private String DrinkName;
-    private int uid;
+    private String uid;
     private Date DrankAt;
     private int BAC;
     private int Ounces;
@@ -16,6 +16,16 @@ public class Drink {
         this.BAC = BAC;
         Ounces = ounces;
     }
+    public Drink(){
+
+    }
+    public Drink(Drink drink, String uid){
+        this.DrinkName = drink.DrinkName;
+        this.uid = uid;
+        this.DrankAt = drink.DrankAt;
+        this.BAC = drink.BAC;
+        this.Ounces = drink.Ounces;
+    }
     public String getDrinkName() {
         return DrinkName;
     }
@@ -24,11 +34,11 @@ public class Drink {
         DrinkName = drinkName;
     }
 
-    public int getUid() {
+    public String getUid() {
         return uid;
     }
 
-    public void setUid(int uid) {
+    public void setUid(String uid) {
         this.uid = uid;
     }
 

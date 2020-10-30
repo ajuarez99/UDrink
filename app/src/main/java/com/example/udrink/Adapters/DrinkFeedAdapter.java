@@ -7,10 +7,18 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.udrink.Firebase.FirebaseUsersUtil;
 import com.example.udrink.Models.Drink;
+import com.example.udrink.Models.User;
 import com.example.udrink.R;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -24,7 +32,7 @@ public class DrinkFeedAdapter extends RecyclerView.Adapter<DrinkFeedAdapter.View
     private List<Drink> mDataset;
     public Context context;
     private int listId;
-
+private ChildEventListener mChildListener;
     public class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public TextView beerName;
@@ -43,14 +51,31 @@ public class DrinkFeedAdapter extends RecyclerView.Adapter<DrinkFeedAdapter.View
         }
     }
 
-    public DrinkFeedAdapter() {
+    public DrinkFeedAdapter(String uid) {
+
+        final FirebaseUsersUtil firebaseUtil = new FirebaseUsersUtil();
+
+        firebaseUtil.getUserDrinksById(uid, new FirebaseUsersUtil.FireStoreUserCallback() {
+            @Override
+            public void newUserCallBack(DocumentSnapshot user) {
+
+            }
+
+            @Override
+            public void getUserCallback(DocumentSnapshot user) {
+
+            }
+
+            @Override
+           public void getUserDrinks(DocumentSnapshot drinks) {
+//                User user = new User(drinks.toObject(User.class));
+//
+//                mDataset.addAll(user.getDrinks());
+//                notifyDataSetChanged();
+            }
+        });
+
         mDataset = new ArrayList<>();
-        for(int i = 0; i< 10; i++){
-            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            Calendar cal = Calendar.getInstance();
-           Drink drink = new Drink("busch",cal.getTime() ,12,12);
-           mDataset.add(drink);
-        }
 
 
     }
@@ -66,7 +91,20 @@ public class DrinkFeedAdapter extends RecyclerView.Adapter<DrinkFeedAdapter.View
         DrinkFeedAdapter.ViewHolder vh = new DrinkFeedAdapter.ViewHolder(v);
         return vh;
     }
+    public void updateData(ArrayList<Drink> viewModels) {
+        mDataset.clear();
+        mDataset.addAll(viewModels);
+        notifyDataSetChanged();
+    }
+    public void addItem(int position, Drink m) {
+        mDataset.add(position, m);
+        notifyItemInserted(position);
+    }
 
+    public void removeItem(int position) {
+        mDataset.remove(position);
+        notifyItemRemoved(position);
+    }
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final DrinkFeedAdapter.ViewHolder holder, final int position) {

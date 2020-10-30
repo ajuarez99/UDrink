@@ -30,6 +30,15 @@ public class User {
         this.drinks = drinks;
     }
 
+    public User(User user){
+        this.uid = user.uid;
+        this.name = user.name;
+        this.weight = user.weight;
+        this.feet = user.feet;
+        this.inches = user.inches;
+        this.drinks = user.drinks;
+        this.friends = user.friends;
+    }
     public User(String uid, String name, int weight, int feet, int inches) {
         this.uid = uid;
         this.name = name;

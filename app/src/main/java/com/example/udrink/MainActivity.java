@@ -69,6 +69,11 @@ public class MainActivity extends AppCompatActivity {
             public void getUserCallback(DocumentSnapshot user) {
 
             }
+
+            @Override
+            public void getUserDrinks(DocumentSnapshot drinks) {
+
+            }
         });
 
 

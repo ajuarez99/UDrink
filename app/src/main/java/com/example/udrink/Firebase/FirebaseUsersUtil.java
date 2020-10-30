@@ -46,7 +46,34 @@ public class FirebaseUsersUtil {
                 });
     }
     public void addDrinkToUser(String uid, Drink drink){
-            db.collection("users").document(uid).update("drinks", FieldValue.arrayUnion(drink));
+            Drink drinkEnter = new Drink(drink , uid);
+            db.collection("drinks").document().set(drinkEnter)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Log.d(TAG, "DocumentSnapshot added");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error adding document", e);
+                        }
+                    });;
+    }
+    public void getUserDrinksById(String uid, final FireStoreUserCallback fireStoreUserCallback){
+        db.collection("drinks").document(uid).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                      fireStoreUserCallback.getUserDrinks(documentSnapshot);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error adding document", e);
+                    }
+                });
     }
     public void findUserById(String uid, final FireStoreUserCallback fireStoreUserCallback) {
         final User userReturn = new User();
@@ -72,7 +99,8 @@ public class FirebaseUsersUtil {
     }
 
     public interface FireStoreUserCallback{
-        void newUserCallBack(DocumentSnapshot user);
-        void getUserCallback(DocumentSnapshot user);
+        abstract void newUserCallBack(DocumentSnapshot user);
+        abstract void getUserCallback(DocumentSnapshot user);
+        abstract void getUserDrinks(DocumentSnapshot drinks);
     }
 }

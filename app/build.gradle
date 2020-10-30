@@ -53,6 +53,7 @@ dependencies {
     // Firebase UI
     implementation 'com.firebaseui:firebase-ui-database:6.3.0'
     implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.firebaseui:firebase-ui-firestore:6.2.1'
 
     // Testing dependencies
     testImplementation 'junit:junit:4.13'
