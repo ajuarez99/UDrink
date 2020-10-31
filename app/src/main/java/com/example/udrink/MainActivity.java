@@ -72,48 +72,7 @@ public class MainActivity extends AppCompatActivity {
         firebaseUtil.findUserById(mFirebaseUser.getUid(),new FirebaseUsersUtil.FireStoreUserCallback(){
             @Override
             public void newUserCallBack(DocumentSnapshot user) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("Add User Info to Calculate BAC:");
-
-                LinearLayout lp =new LinearLayout(MainActivity.this);
-                lp.setOrientation(LinearLayout.VERTICAL);
-
-                final EditText inputFeet = new EditText(MainActivity.this);
-                inputFeet.setHint("feet");
-                inputFeet.setInputType(InputType.TYPE_CLASS_NUMBER );
-
-                final EditText inputInches = new EditText(MainActivity.this);
-                inputInches.setHint("inches");
-                inputInches.setInputType(InputType.TYPE_CLASS_NUMBER );
-
-                final EditText inputWeight = new EditText(MainActivity.this);
-                inputWeight.setHint("weight(lbs)");
-                inputWeight.setInputType(InputType.TYPE_CLASS_NUMBER );
-
-                lp.addView(inputFeet);
-                lp.addView(inputInches);
-                lp.addView(inputWeight);
-                builder.setView(lp);
-
-
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        User user = new User(Integer.parseInt(inputWeight.getText().toString()),Integer.parseInt(inputFeet.getText().toString()),Integer.parseInt(inputInches.getText().toString()));
-                        user.setUid(mFirebaseUser.getUid());
-                        user.setName(mFirebaseUser.getDisplayName());
-                        firebaseUtil.writeNewUser(user);
-
-
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                builder.show();
+                startingScreenGetUserInfo();
             }
             @Override
             public void getUserCallback(DocumentSnapshot user) {
@@ -129,6 +88,50 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void startingScreenGetUserInfo(){
+        final FirebaseUsersUtil firebaseUtil = new FirebaseUsersUtil();
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Add User Info to Calculate BAC:");
 
+        LinearLayout lp =new LinearLayout(MainActivity.this);
+        lp.setOrientation(LinearLayout.VERTICAL);
+
+        final EditText inputFeet = new EditText(MainActivity.this);
+        inputFeet.setHint("feet");
+        inputFeet.setInputType(InputType.TYPE_CLASS_NUMBER );
+
+        final EditText inputInches = new EditText(MainActivity.this);
+        inputInches.setHint("inches");
+        inputInches.setInputType(InputType.TYPE_CLASS_NUMBER );
+
+        final EditText inputWeight = new EditText(MainActivity.this);
+        inputWeight.setHint("weight(lbs)");
+        inputWeight.setInputType(InputType.TYPE_CLASS_NUMBER );
+
+        lp.addView(inputFeet);
+        lp.addView(inputInches);
+        lp.addView(inputWeight);
+        builder.setView(lp);
+
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                User user = new User(Integer.parseInt(inputWeight.getText().toString()),Integer.parseInt(inputFeet.getText().toString()),Integer.parseInt(inputInches.getText().toString()));
+                user.setUid(mFirebaseUser.getUid());
+                user.setName(mFirebaseUser.getDisplayName());
+                firebaseUtil.writeNewUser(user);
+
+
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
+    }
 
 }
