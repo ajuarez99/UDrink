@@ -29,9 +29,9 @@ public class FirebaseUsersUtil {
         db = FirebaseFirestore.getInstance();
     }
 
-    public void writeNewUser(String name , String uid) {
-        User user = new User(uid,name);
-        db.collection("users").document(user.getUid()).set(user)
+    public void writeNewUser(User userInfo) {
+
+        db.collection("users").document(userInfo.getUid()).set(userInfo)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

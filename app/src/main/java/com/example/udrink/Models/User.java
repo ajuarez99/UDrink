@@ -13,7 +13,11 @@ public class User {
     public User() {
 
     }
-
+    public User(int weight, int feet, int inches){
+        this.weight = weight;
+        this.feet = feet;
+        this.inches = inches;
+    }
     public List<User> getFriends() {
         return friends;
     }
