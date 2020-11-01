@@ -8,6 +8,7 @@ public class User {
     private int weight;
     private int feet;
     private int inches;
+    private String partyId;
     private List<User> friends;
     private List<Drink> drinks;
     public User() {
@@ -60,6 +61,7 @@ public class User {
     public User(String uid, String name) {
         this.uid = uid;
         this.name = name;
+        this.partyId = "";
     }
 
 

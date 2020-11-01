@@ -5,14 +5,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.example.udrink.Firebase.FirebaseUsersUtil;
-import com.example.udrink.Firebase.FirebaseUtil;
-import com.example.udrink.Models.Drink;
 import com.example.udrink.Models.User;
 import com.example.udrink.ui.Login.SignInActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -26,9 +23,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;

@@ -4,27 +4,17 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.udrink.Firebase.FirebaseUsersUtil;
 import com.example.udrink.Models.Drink;
-import com.example.udrink.Models.User;
 import com.example.udrink.R;
 import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.firestore.DocumentSnapshot;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class DrinkFeedAdapter extends RecyclerView.Adapter<DrinkFeedAdapter.ViewHolder> {
@@ -44,8 +34,8 @@ private ChildEventListener mChildListener;
         public ViewHolder(View v) {
             super(v);
             layout = v;
-            beerName = v.findViewById(R.id.drinkName);
-            beerABV = v.findViewById(R.id.bac);
+            beerName = v.findViewById(R.id.partyName);
+            beerABV = v.findViewById(R.id.bac_value);
             beerOunces = v.findViewById(R.id.ounces);
             timeAgo = v.findViewById(R.id.timeago);
         }

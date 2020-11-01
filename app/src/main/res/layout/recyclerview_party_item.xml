@@ -25,37 +25,50 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/drinkName"
+            android:id="@+id/partyName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:text="test"
+            android:text="Name"
             android:textAppearance="?android:attr/textAppearanceLarge" />
     </LinearLayout>
-    <LinearLayout
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginRight="10dp"
         android:layout_marginEnd="10dp"
-        android:orientation="vertical">
+        android:layout_marginRight="10dp">
+
+        \
+
+        <TextView
+            android:id="@+id/bac_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/bac"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginStart="26dp"
+            android:layout_marginLeft="26dp"
+            android:layout_marginTop="17dp"
+            android:gravity="right"
+            android:text="@string/bac"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
             android:id="@+id/bac"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="9dp"
             android:gravity="right"
-            android:layout_marginTop="20px"
-            android:text="@string/bac"
-            android:textAppearance="?android:attr/textAppearanceSmall" />\
-        <TextView
-            android:id="@+id/bac_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:layout_marginTop="20px"
             android:text="@string/bac"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
 
-    </LinearLayout>
+    </RelativeLayout>
     </LinearLayout>

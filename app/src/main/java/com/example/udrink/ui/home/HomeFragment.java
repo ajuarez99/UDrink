@@ -9,29 +9,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.udrink.Adapters.DrinkFeedAdapter;
 import com.example.udrink.Firebase.FirebaseUsersUtil;
 import com.example.udrink.Models.Drink;
-import com.example.udrink.Models.User;
 import com.example.udrink.R;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.firebase.ui.firestore.SnapshotParser;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -61,8 +53,8 @@ public class HomeFragment extends Fragment {
         public ViewHolder(View v) {
             super(v);
             layout = v;
-            beerName = v.findViewById(R.id.drinkName);
-            beerABV = v.findViewById(R.id.bac);
+            beerName = v.findViewById(R.id.partyName);
+            beerABV = v.findViewById(R.id.bac_value);
             beerOunces = v.findViewById(R.id.ounces);
             timeAgo = v.findViewById(R.id.timeago);
         }

@@ -25,7 +25,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/drinkName"
+                android:id="@+id/partyName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
@@ -33,7 +33,7 @@
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <TextView
-                android:id="@+id/bac"
+                android:id="@+id/bac_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
