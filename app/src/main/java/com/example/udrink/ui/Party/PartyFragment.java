@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.udrink.Adapters.PartyFeedAdapter;
@@ -23,6 +25,7 @@ import com.example.udrink.Models.User;
 import com.example.udrink.R;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -38,8 +41,12 @@ public class PartyFragment extends Fragment {
     private PartyViewModel mViewModel;
     private Context context;
     private RecyclerView partyRview;
+    private Button create, join;
+    private EditText et1, et2;
     private FirestoreRecyclerAdapter adapter;
     private String uid;
+    private User temp;
+    private View view;
     private String partyId;
     private FirebaseUsersUtil fUU;
 
@@ -52,26 +59,51 @@ public class PartyFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.party_fragment, container, false);
+        view = inflater.inflate(R.layout.party_fragment, container, false);
 
         SharedPreferences settings = getActivity().getSharedPreferences(UDRINK_SETTINGS, MODE_PRIVATE);
         uid = settings.getString(UDRINK_UID, "");
+        fUU = new FirebaseUsersUtil();
+        create = view.findViewById(R.id.create);
+        join = view.findViewById(R.id.join);
+        et1 = view.findViewById(R.id.editText2);
+        et2 = view.findViewById(R.id.editText3);
         partyRview = view.findViewById(R.id.user_recycler);
         partyRview.setLayoutManager(new LinearLayoutManager(context));
         setPartyFeed();
 
+        //TODO: Change this to navigate to different fragment
+        fUU.findUserById(uid, new FirebaseUsersUtil.FireStoreUserCallback() {
+            @Override
+            public void newUserCallBack(DocumentSnapshot user) {
+
+            }
+
+            @Override
+            public void getUserCallback(DocumentSnapshot user) {
+                if(user.get("partyId") == null) {
+                    partyRview.setVisibility(View.GONE);
+                }
+                else {
+                    create.setVisibility(View.GONE);
+                    join.setVisibility(View.GONE);
+                    et1.setVisibility(View.GONE);
+                    et2.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void getUserDrinks(DocumentSnapshot drinks) {
+
+            }
+        });
+
         return view;
     }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-
-
-
-
-    }
-
+    
     private void setPartyFeed(){
+
+        //TODO: Change this to filter based on partyId
         Query query = FirebaseFirestore.getInstance()
                 .collection("users").whereEqualTo("uid", uid);
 
@@ -101,15 +133,18 @@ public class PartyFragment extends Fragment {
        partyRview.setAdapter(adapter);
     }
 
+
     @Override
     public void onStart() {
         super.onStart();
-        adapter.startListening();
+        if(adapter != null)
+            adapter.startListening();
     }
     @Override
     public void onStop() {
         super.onStop();
-        adapter.stopListening();
+        if(adapter != null)
+            adapter.stopListening();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
@@ -124,7 +159,4 @@ public class PartyFragment extends Fragment {
 
 
     }
-
-
-
 }

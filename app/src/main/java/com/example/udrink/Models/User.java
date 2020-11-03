@@ -105,6 +105,14 @@ public class User {
         this.name = name;
     }
 
+    public String getPartyId() {
+        return partyId;
+    }
+
+    public void setPartyId(String partyId) {
+        this.partyId = partyId;
+    }
+
     public void copyUser(User copy){
         if(copy != null){
             this.uid = copy.getUid();
