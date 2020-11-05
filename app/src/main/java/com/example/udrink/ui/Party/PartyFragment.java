@@ -17,7 +17,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+
+
 import com.example.udrink.Firebase.FirebaseUsersUtil;
+import com.example.udrink.Models.Party;
 import com.example.udrink.Models.User;
 import com.example.udrink.R;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -213,4 +216,6 @@ public class PartyFragment extends Fragment {
 
 
     }
+
+
 }

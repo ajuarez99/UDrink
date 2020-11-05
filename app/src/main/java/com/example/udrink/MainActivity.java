@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = settings.edit();
         editor.putString(UDRINK_UID, mFirebaseUser.getUid());
         editor.commit();
+
         final FirebaseUsersUtil firebaseUtil = new FirebaseUsersUtil();
 
         firebaseUtil.findUserById(mFirebaseUser.getUid(),new FirebaseUsersUtil.FireStoreUserCallback(){

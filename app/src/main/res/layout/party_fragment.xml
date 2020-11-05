@@ -46,8 +46,13 @@
         android:layout_marginLeft="0dp"
         android:layout_marginTop="124dp"
         android:ems="10"
+<<<<<<< HEAD
         android:hint="Party Name"
         android:inputType="textPersonName" />
+=======
+        android:inputType="textPersonName"
+        android:hint="Party Name" />
+>>>>>>> a4c41243c116ad3734f46cde02131d92039311cc
 
     <Button
         android:id="@+id/join"
@@ -72,7 +77,12 @@
         android:layout_marginLeft="100dp"
         android:layout_marginTop="40dp"
         android:ems="10"
+<<<<<<< HEAD
         android:hint="Party Name"
         android:inputType="textPersonName" />
+=======
+        android:inputType="textPersonName"
+        android:hint="Party Name" />
+>>>>>>> a4c41243c116ad3734f46cde02131d92039311cc
 
 </RelativeLayout>
