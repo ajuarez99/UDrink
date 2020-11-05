@@ -4,16 +4,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <Button
+        android:id="@+id/leave"
+        android:layout_width="117dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="286dp"
+        android:layout_marginLeft="286dp"
+        android:layout_marginTop="8dp"
+        android:text="Leave Party" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/user_recycler"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/leave"
+        android:layout_marginTop="11dp" />
 
     <Button
         android:id="@+id/create"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editText2"
+        android:layout_below="@+id/createParty"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_marginStart="143dp"
@@ -22,24 +36,30 @@
         android:text="Create Party" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/createParty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/editText3"
-        android:layout_alignLeft="@+id/editText3"
+        android:layout_alignStart="@+id/joinParty"
+        android:layout_alignLeft="@+id/joinParty"
         android:layout_alignParentTop="true"
         android:layout_marginStart="0dp"
         android:layout_marginLeft="0dp"
         android:layout_marginTop="124dp"
         android:ems="10"
+        android:hint="Party Name" />
+<<<<<<< HEAD
+        android:hint="Party Name"
+        android:inputType="textPersonName" />
+=======
         android:inputType="textPersonName"
         android:hint="Party Name" />
+>>>>>>> a4c41243c116ad3734f46cde02131d92039311cc
 
     <Button
         android:id="@+id/join"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editText3"
+        android:layout_below="@+id/joinParty"
         android:layout_alignStart="@+id/create"
         android:layout_alignLeft="@+id/create"
         android:layout_marginStart="9dp"
@@ -48,7 +68,7 @@
         android:text="Join Party" />
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/joinParty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/create"
@@ -58,7 +78,13 @@
         android:layout_marginLeft="100dp"
         android:layout_marginTop="40dp"
         android:ems="10"
+        android:hint="Party Name" />
+<<<<<<< HEAD
+        android:hint="Party Name"
+        android:inputType="textPersonName" />
+=======
         android:inputType="textPersonName"
         android:hint="Party Name" />
+>>>>>>> a4c41243c116ad3734f46cde02131d92039311cc
 
 </RelativeLayout>
