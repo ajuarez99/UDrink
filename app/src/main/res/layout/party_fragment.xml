@@ -33,7 +33,7 @@
         android:layout_marginTop="124dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Name" />
+        android:hint="Party Name" />
 
     <Button
         android:id="@+id/join"
@@ -59,6 +59,6 @@
         android:layout_marginTop="40dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Name" />
+        android:hint="Party Name" />
 
 </RelativeLayout>

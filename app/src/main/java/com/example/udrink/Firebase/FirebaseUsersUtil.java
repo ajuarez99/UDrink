@@ -45,36 +45,7 @@ public class FirebaseUsersUtil {
                     }
                 });
     }
-    public void addDrinkToUser(String uid, Drink drink){
-            Drink drinkEnter = new Drink(drink , uid);
-            db.collection("drinks").document().set(drinkEnter)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    Log.d(TAG, "DocumentSnapshot added");
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.w(TAG, "Error adding document", e);
-                        }
-                    });;
-    }
-    public void getUserDrinksById(String uid, final FireStoreUserCallback fireStoreUserCallback){
-        db.collection("drinks").document(uid).get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                      fireStoreUserCallback.getUserDrinks(documentSnapshot);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-                    }
-                });
-    }
+
     public void findUserById(String uid, final FireStoreUserCallback fireStoreUserCallback) {
         final User userReturn = new User();
         db.collection("users").document(uid).get()
@@ -103,4 +74,39 @@ public class FirebaseUsersUtil {
         abstract void getUserCallback(DocumentSnapshot user);
         abstract void getUserDrinks(DocumentSnapshot drinks);
     }
+
+/*
+Move these to drinks util class later along with getUserDrinks interface
+ */
+    public void addDrinkToUser(String uid, Drink drink){
+        Drink drinkEnter = new Drink(drink , uid);
+        db.collection("drinks").document().set(drinkEnter)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot added");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Error adding document", e);
+            }
+        });;
+    }
+    public void getUserDrinksById(String uid, final FireStoreUserCallback fireStoreUserCallback){
+        db.collection("drinks").document(uid).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        fireStoreUserCallback.getUserDrinks(documentSnapshot);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error adding document", e);
+                    }
+                });
+    }
+
 }

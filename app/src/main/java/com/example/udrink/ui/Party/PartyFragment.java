@@ -20,7 +20,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.udrink.Adapters.PartyFeedAdapter;
+import com.example.udrink.Firebase.FirebasePartyUtil;
 import com.example.udrink.Firebase.FirebaseUsersUtil;
+import com.example.udrink.Models.Party;
 import com.example.udrink.Models.User;
 import com.example.udrink.R;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -157,6 +159,12 @@ public class PartyFragment extends Fragment {
             name = itemView.findViewById(R.id.partyName);
         }
 
+
+    }
+
+    private void createParty(){
+        Party newParty = new Party(et1.getText().toString());
+        FirebasePartyUtil firebasePartyUtil = new FirebasePartyUtil();
 
     }
 }
