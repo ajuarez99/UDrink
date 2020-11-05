@@ -46,6 +46,7 @@
         android:layout_marginLeft="0dp"
         android:layout_marginTop="124dp"
         android:ems="10"
+        android:hint="Party Name" />
 <<<<<<< HEAD
         android:hint="Party Name"
         android:inputType="textPersonName" />
@@ -77,6 +78,7 @@
         android:layout_marginLeft="100dp"
         android:layout_marginTop="40dp"
         android:ems="10"
+        android:hint="Party Name" />
 <<<<<<< HEAD
         android:hint="Party Name"
         android:inputType="textPersonName" />
