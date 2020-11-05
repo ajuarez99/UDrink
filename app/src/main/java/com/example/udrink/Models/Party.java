@@ -29,13 +29,6 @@ public class Party {
         this.pid = pid;
     }
 
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
 
     public String getPartyName() {
         return partyName;
