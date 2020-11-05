@@ -34,7 +34,7 @@ public class FirebasePartyUtil {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
-                        
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

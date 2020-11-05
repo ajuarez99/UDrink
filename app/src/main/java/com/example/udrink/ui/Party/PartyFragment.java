@@ -163,7 +163,7 @@ public class PartyFragment extends Fragment {
     }
 
     private void createParty(){
-        Party newParty = new Party(et1.getText().toString());
+        Party newParty = new Party(et1.getText().toString(),true);
         FirebasePartyUtil firebasePartyUtil = new FirebasePartyUtil();
 
     }

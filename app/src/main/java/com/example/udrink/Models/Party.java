@@ -8,7 +8,6 @@ import java.util.List;
 public class Party {
 
     private String pid;
-    private List<User> users;
     private String partyName;
     private Location currentLocation;
     private boolean activeParty;
@@ -24,8 +23,7 @@ public class Party {
         this.partyName = partyName;
     }
 
-    public Party(List<User> users, String name, Location location) {
-        this.users = users;
+    public Party(String name, Location location) {
         partyName = name;
         currentLocation = location;
         startTime = new Date(System.currentTimeMillis());
@@ -54,14 +52,6 @@ public class Party {
         this.pid = pid;
     }
 
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
-
     public String getPartyName() {
         return partyName;
     }
@@ -78,7 +68,4 @@ public class Party {
         this.currentLocation = currentLocation;
     }
 
-    public void addUser(User u){
-        users.add(u);
-    }
 }
