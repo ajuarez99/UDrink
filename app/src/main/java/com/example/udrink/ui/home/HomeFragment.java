@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.udrink.Firebase.FirebaseUsersUtil;
 import com.example.udrink.Models.Drink;
 import com.example.udrink.R;
+import com.example.udrink.Util.UTime;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -46,6 +47,7 @@ public class HomeFragment extends Fragment {
     private static RecyclerView.Adapter mAdapter;
     private static RecyclerView.LayoutManager layoutManager;
     private static String uid;
+    private static UTime getTimeAgo;
     FirestoreRecyclerAdapter adapter;
     public class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
@@ -71,6 +73,8 @@ public class HomeFragment extends Fragment {
         SharedPreferences settings = getActivity().getSharedPreferences(UDRINK_SETTINGS, MODE_PRIVATE);
 
        uid = settings.getString(UDRINK_UID, "");
+
+       getTimeAgo  = new UTime();
         /*
         Set up the recycler view for the home feed on drinks
          */
@@ -148,10 +152,11 @@ public class HomeFragment extends Fragment {
             public void onBindViewHolder(ViewHolder holder, int position, Drink model) {
                 // - get element from your dataset at this position
                 // - replace the contents of the view with that element
+
                 holder.beerName.setText(model.getDrinkName());
-                holder.beerABV.setText(String.valueOf(model.getABV()));
-                holder.beerOunces.setText(String.valueOf(model.getOunces()));
-                holder.timeAgo.setText(getTimeAgo(model.getDrankAt()));
+                holder.beerABV.setText(String.valueOf(model.getABV()) + "%");
+                holder.beerOunces.setText(String.valueOf(model.getOunces())+ " oz.");
+                holder.timeAgo.setText(getTimeAgo.getTimeAgo(model.getDrankAt()));
             }
 
             @Override
@@ -168,39 +173,7 @@ public class HomeFragment extends Fragment {
 
         recyclerView.setAdapter(adapter);
     }
-    private String getTimeAgo(Date drankAt){
-        Date now = new Date(System.currentTimeMillis());
-        Long difference = now.getTime() - drankAt.getTime();
-        Long days  = (difference / (1000*60*60*24));
-        LocalDate stuff = drankAt.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        if (days < 7 && days > 1){
-            return days.toString() + "d";
-        }
-        else if(days >= 7 ){
-            DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-            try {
-                return (drankAt.getMonth() +1) +"/" + stuff.getDayOfMonth() +"/" + (drankAt.getYear() -100);
-            }catch ( Exception e) {
-                return "";
-            }
-        }
 
-        long minute = (difference / (1000 * 60)) % 60;
-        long hour = (difference / (1000 * 60 * 60)) % 24;
-        if(hour < 24 && hour > 1){
-            long day  = hour /24;
-            return String.valueOf(hour)+"h";
-        }
-        else if( hour < 1 && minute >= 1){
-            return String.valueOf(minute) +"m";
-        }
-        else if (minute < 1){
-
-            long second = (difference / 1000) % 60;
-            return String.valueOf(second) + "s";
-        }
-        return "now";
-    }
     @Override
     public void onStart() {
         super.onStart();
