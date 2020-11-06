@@ -18,7 +18,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 
-
+import com.example.udrink.Firebase.FirebasePartyUtil;
 import com.example.udrink.Firebase.FirebaseUsersUtil;
 import com.example.udrink.Models.Party;
 import com.example.udrink.Models.User;
@@ -161,8 +161,8 @@ public class PartyFragment extends Fragment {
     }
 
     private void setPartyFeed(){
-
         //TODO: Change this to filter based on partyId
+
             Query query = FirebaseFirestore.getInstance()
                     .collection("users").whereEqualTo("partyId", pid);
 
@@ -217,11 +217,9 @@ public class PartyFragment extends Fragment {
 
     }
 
-<<<<<<< HEAD
-    private void createParty(){
-        Party newParty = new Party(et1.getText().toString(),true);
+    private void createParty() {
+        Party newParty = new Party(et1.getText().toString(), true);
         FirebasePartyUtil firebasePartyUtil = new FirebasePartyUtil();
-=======
->>>>>>> c6f9d33523ac8df0ea78919e0f2214f53cb17c04
 
+    }
 }

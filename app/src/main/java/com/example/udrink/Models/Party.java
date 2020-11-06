@@ -52,10 +52,6 @@ public class Party {
         this.pid = pid;
     }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> c6f9d33523ac8df0ea78919e0f2214f53cb17c04
     public String getPartyName() {
         return partyName;
     }

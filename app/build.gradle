@@ -37,6 +37,9 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0-alpha06'
     implementation 'com.android.support:multidex:1.0.3'
     // Google
+
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation "com.google.android.gms:play-services-location:15.0.1"
     implementation 'com.google.android.gms:play-services-auth:18.1.0'
     implementation 'com.firebaseui:firebase-ui-auth:6.2.0'
 
