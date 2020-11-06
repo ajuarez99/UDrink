@@ -14,4 +14,5 @@ public class FirebaseUtil {
         User user = new User(userId, name);
         mDatabase.child("users").child(userId).setValue(user);
     }
+
 }
