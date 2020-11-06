@@ -27,8 +27,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.example.udrink.MainActivity.UDRINK_SETTINGS;
@@ -146,7 +151,7 @@ public class HomeFragment extends Fragment {
                 holder.beerName.setText(model.getDrinkName());
                 holder.beerABV.setText(String.valueOf(model.getABV()));
                 holder.beerOunces.setText(String.valueOf(model.getOunces()));
-                holder.timeAgo.setText(model.getDrankAt().toString());
+                holder.timeAgo.setText(getTimeAgo(model.getDrankAt()));
             }
 
             @Override
@@ -162,6 +167,39 @@ public class HomeFragment extends Fragment {
         };
 
         recyclerView.setAdapter(adapter);
+    }
+    private String getTimeAgo(Date drankAt){
+        Date now = new Date(System.currentTimeMillis());
+        Long difference = now.getTime() - drankAt.getTime();
+        Long days  = (difference / (1000*60*60*24));
+        LocalDate stuff = drankAt.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        if (days < 7 && days > 1){
+            return days.toString() + "d";
+        }
+        else if(days >= 7 ){
+            DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            try {
+                return (drankAt.getMonth() +1) +"/" + stuff.getDayOfMonth() +"/" + (drankAt.getYear() -100);
+            }catch ( Exception e) {
+                return "";
+            }
+        }
+
+        long minute = (difference / (1000 * 60)) % 60;
+        long hour = (difference / (1000 * 60 * 60)) % 24;
+        if(hour < 24 && hour > 1){
+            long day  = hour /24;
+            return String.valueOf(hour)+"h";
+        }
+        else if( hour < 1 && minute >= 1){
+            return String.valueOf(minute) +"m";
+        }
+        else if (minute < 1){
+
+            long second = (difference / 1000) % 60;
+            return String.valueOf(second) + "s";
+        }
+        return "now";
     }
     @Override
     public void onStart() {
