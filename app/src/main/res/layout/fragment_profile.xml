@@ -1,51 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/profileImage"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        android:layout_margin="8dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/profileImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:contentDescription="@string/todo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/nameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/profileImage"
+                tools:text="Joe Strobel" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/heightView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/_7ft"
+                android:textSize="30sp"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:layout_margin="16dp"/>
+
+            <TextView
+                android:id="@+id/weightView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/_500lbs"
+                android:textSize="30sp"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:layout_margin="16dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/nameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileImage"
-        tools:text="Joe Strobel" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/partyFeedRecyclerView"
-        android:layout_width="391dp"
-        android:layout_height="454dp"
-        android:layout_marginTop="24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
-        tools:listitem="@layout/recylerview_party_item" />
-
-    <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/partiesLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="20dp"
-        android:text="Party Feed"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameTextView" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_marginTop="8dp"
+        android:text="@string/parties"
+        android:textSize="18sp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/partyFeedRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginTop="8dp"
+        tools:listitem="@layout/recylerview_party_item" />
+
+</LinearLayout>

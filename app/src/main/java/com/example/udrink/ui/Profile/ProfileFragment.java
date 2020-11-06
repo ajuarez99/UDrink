@@ -49,6 +49,8 @@ public class ProfileFragment extends Fragment {
 
         final TextView nameView = root.findViewById(R.id.nameTextView);
         final ImageView profileImage = root.findViewById(R.id.profileImage);
+        final TextView heightView = root.findViewById(R.id.heightView);
+        final TextView weightView = root.findViewById(R.id.weightView);
 
         db = FirebaseFirestore.getInstance();
 
@@ -64,10 +66,12 @@ public class ProfileFragment extends Fragment {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         String name = (String) document.get("name");
-                        String feet = (String) document.get("feet");
-                        String inches = (String) document.get("inches");
-                        String weight = (String) document.get("weight");
+                        long feet = (long) document.get("feet");
+                        long inches = (long) document.get("inches");
+                        long weight = (long) document.get("weight");
                         nameView.setText(name);
+                        heightView.setText(getResources().getString(R.string.height, feet, inches));
+                        weightView.setText(getResources().getString(R.string.weight, weight));
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                     } else {
                         Log.d(TAG, "No such document");
@@ -79,6 +83,20 @@ public class ProfileFragment extends Fragment {
         });
 
         profileImage.setImageResource(R.drawable.circle);
+
+        heightView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        weightView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
 
         // Setup RecyclerView
