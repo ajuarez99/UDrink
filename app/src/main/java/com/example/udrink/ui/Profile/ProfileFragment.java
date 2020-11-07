@@ -150,10 +150,15 @@ public class ProfileFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         // Update one field, creating the document if it does not already exist.
                         Map<String, Object> data = new HashMap<>();
-                        long weight = Long.parseLong(weightText.getText().toString());
-                        data.put("weight", weight);
-                        final DocumentReference docRef = db.collection("users").document(uid);
-                        docRef.set(data,SetOptions.merge());
+                        long weight;
+                        try {
+                            weight = Long.parseLong(weightText.getText().toString());
+                            data.put("weight", weight);
+                            final DocumentReference docRef = db.collection("users").document(uid);
+                            docRef.set(data,SetOptions.merge());
+                        } catch (Exception e) {
+                            Log.d(TAG, "onClick: " + e);
+                        }
                     }
                 })
                 .create();
@@ -179,12 +184,17 @@ public class ProfileFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         // Update one field, creating the document if it does not already exist.
                         Map<String, Object> data = new HashMap<>();
-                        long feet = Long.parseLong(feetText.getText().toString());
-                        long inches = Long.parseLong(inchesText.getText().toString());
-                        data.put("feet", feet);
-                        data.put("inches", inches);
-                        final DocumentReference docRef = db.collection("users").document(uid);
-                        docRef.set(data,SetOptions.merge());
+                        long feet, inches;
+                        try {
+                            feet = Long.parseLong(feetText.getText().toString());
+                            inches = Long.parseLong(inchesText.getText().toString());
+                            data.put("feet", feet);
+                            data.put("inches", inches);
+                            final DocumentReference docRef = db.collection("users").document(uid);
+                            docRef.set(data,SetOptions.merge());
+                        } catch (Exception e){
+                            Log.d(TAG, "onClick: " + e);
+                        }
                     }
                 })
                 .create();
