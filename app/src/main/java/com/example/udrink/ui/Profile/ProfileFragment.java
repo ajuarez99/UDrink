@@ -1,16 +1,23 @@
 package com.example.udrink.ui.Profile;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.graphics.drawable.IconCompatParcelizer;
 import androidx.fragment.app.Fragment;
@@ -28,8 +35,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.SetOptions;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static android.content.Context.MODE_PRIVATE;
 import static android.service.controls.ControlsProviderService.TAG;
@@ -44,6 +57,7 @@ public class ProfileFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.M)
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        final Context con = this.getContext();
 
         final View root = inflater.inflate(R.layout.fragment_profile, container, false);
 
@@ -58,6 +72,7 @@ public class ProfileFragment extends Fragment {
         uid = settings.getString(UDRINK_UID, "");
 
         FirebaseUsersUtil util = new FirebaseUsersUtil();
+
         final DocumentReference docRef = db.collection("users").document(uid);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -82,19 +97,33 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                weightView.setText(getResources().getString(R.string.weight, (long) value.get("weight")));
+            }
+        });
+
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                heightView.setText(getResources().getString(R.string.height, (long) value.get("feet"), (long) value.get("inches")));
+            }
+        });
+
         profileImage.setImageResource(R.drawable.circle);
 
         heightView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                showChangeHeightDialog(con);
             }
         });
 
         weightView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                showChangeWeightDialog(con);
             }
         });
 
@@ -108,5 +137,57 @@ public class ProfileFragment extends Fragment {
 
 
         return root;
+    }
+
+    private void showChangeWeightDialog(Context c) {
+        final EditText weightText = new EditText(c);
+        weightText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        AlertDialog dialog = new AlertDialog.Builder(c)
+                .setTitle("Edit Weight")
+                .setView(weightText)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Update one field, creating the document if it does not already exist.
+                        Map<String, Object> data = new HashMap<>();
+                        long weight = Long.parseLong(weightText.getText().toString());
+                        data.put("weight", weight);
+                        final DocumentReference docRef = db.collection("users").document(uid);
+                        docRef.set(data,SetOptions.merge());
+                    }
+                })
+                .create();
+        dialog.show();
+    }
+
+    private void showChangeHeightDialog(Context c) {
+        final EditText feetText = new EditText(c);
+        final EditText inchesText = new EditText(c);
+        feetText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        feetText.setHint("Feet");
+        inchesText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        inchesText.setHint("Inches");
+        LinearLayout layout = new LinearLayout(c);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.addView(feetText);
+        layout.addView(inchesText);
+        AlertDialog dialog = new AlertDialog.Builder(c)
+                .setTitle("Edit Height")
+                .setView(layout)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Update one field, creating the document if it does not already exist.
+                        Map<String, Object> data = new HashMap<>();
+                        long feet = Long.parseLong(feetText.getText().toString());
+                        long inches = Long.parseLong(inchesText.getText().toString());
+                        data.put("feet", feet);
+                        data.put("inches", inches);
+                        final DocumentReference docRef = db.collection("users").document(uid);
+                        docRef.set(data,SetOptions.merge());
+                    }
+                })
+                .create();
+        dialog.show();
     }
 }
