@@ -34,7 +34,7 @@ private ChildEventListener mChildListener;
         public ViewHolder(View v) {
             super(v);
             layout = v;
-            beerName = v.findViewById(R.id.partyName);
+            beerName = v.findViewById(R.id.userName);
             beerABV = v.findViewById(R.id.bac_value);
             beerOunces = v.findViewById(R.id.ounces);
             timeAgo = v.findViewById(R.id.timeago);

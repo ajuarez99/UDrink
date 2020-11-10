@@ -1,5 +1,9 @@
 package com.example.udrink.Util;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -9,6 +13,7 @@ public class UTime {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public String getTimeAgo(Date dateAt){
         Date now = new Date(System.currentTimeMillis());
         Long difference = now.getTime() - dateAt.getTime();

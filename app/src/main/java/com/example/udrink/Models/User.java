@@ -1,5 +1,6 @@
 package com.example.udrink.Models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class User {
@@ -8,8 +9,8 @@ public class User {
     private int weight;
     private int feet;
     private int inches;
-    private String partyId;
-    private List<User> friends;
+    private String currentParty;
+    private ArrayList<String> partyHistory = new ArrayList<>();
     private List<Drink> drinks;
     public User() {
 
@@ -18,13 +19,6 @@ public class User {
         this.weight = weight;
         this.feet = feet;
         this.inches = inches;
-    }
-    public List<User> getFriends() {
-        return friends;
-    }
-
-    public void setFriends(List<User> friends) {
-        this.friends = friends;
     }
 
     public List<Drink> getDrinks() {
@@ -42,7 +36,6 @@ public class User {
         this.feet = user.feet;
         this.inches = user.inches;
         this.drinks = user.drinks;
-        this.friends = user.friends;
     }
     public User(String uid, String name, int weight, int feet, int inches) {
         this.uid = uid;
@@ -61,7 +54,7 @@ public class User {
     public User(String uid, String name) {
         this.uid = uid;
         this.name = name;
-        this.partyId = "";
+        this.currentParty = null;
     }
 
 
@@ -105,12 +98,12 @@ public class User {
         this.name = name;
     }
 
-    public String getPartyId() {
-        return partyId;
+    public String getCurrentParty() {
+        return currentParty;
     }
 
-    public void setPartyId(String partyId) {
-        this.partyId = partyId;
+    public void setCurrentParty(String partyId) {
+        this.currentParty = partyId;
     }
 
     public void copyUser(User copy){
@@ -123,4 +116,6 @@ public class User {
         }
 
     }
+
+
 }

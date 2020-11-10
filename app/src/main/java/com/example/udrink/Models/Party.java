@@ -2,17 +2,22 @@ package com.example.udrink.Models;
 
 import android.location.Location;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class Party {
 
-    private String pid;
+
     private String partyName;
     private Location currentLocation;
     private boolean activeParty;
     private Date startTime;
+    private List<String> members;
 
+    public Party() {
+
+    }
     public Party(String partyName, boolean activeParty) {
         this.partyName = partyName;
         this.activeParty = activeParty;
@@ -21,6 +26,9 @@ public class Party {
 
     public Party(String partyName){
         this.partyName = partyName;
+        this.activeParty = true;
+        this.startTime = new Date(System.currentTimeMillis());
+        this.members = new ArrayList<String>();
     }
 
     public Party(String name, Location location) {
@@ -44,13 +52,6 @@ public class Party {
     public void setActiveParty(boolean activeParty) {
         this.activeParty = activeParty;
     }
-    public String getPid() {
-        return pid;
-    }
-
-    public void setPid(String pid) {
-        this.pid = pid;
-    }
 
     public String getPartyName() {
         return partyName;
@@ -68,4 +69,11 @@ public class Party {
         this.currentLocation = currentLocation;
     }
 
+    public void addMember(String uid) {
+        members.add(uid);
+    }
+
+    public List<String> getMembers() {
+        return members;
+    }
 }

@@ -52,7 +52,7 @@ public class PartyFeedAdapter extends RecyclerView.Adapter<PartyFeedAdapter.View
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             bacValue = itemView.findViewById(R.id.bac_value);
-            name = itemView.findViewById(R.id.partyName);
+            name = itemView.findViewById(R.id.userName);
         }
 
 

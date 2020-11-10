@@ -28,13 +28,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.example.udrink.MainActivity.UDRINK_SETTINGS;
@@ -60,7 +55,7 @@ public class HomeFragment extends Fragment {
         public ViewHolder(View v) {
             super(v);
             layout = v;
-            beerName = v.findViewById(R.id.partyName);
+            beerName = v.findViewById(R.id.userName);
             beerABV = v.findViewById(R.id.bac_value);
             beerOunces = v.findViewById(R.id.ounces);
             timeAgo = v.findViewById(R.id.timeago);

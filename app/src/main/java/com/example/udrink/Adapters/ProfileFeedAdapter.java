@@ -55,7 +55,7 @@ public class ProfileFeedAdapter extends RecyclerView.Adapter<ProfileFeedAdapter.
 
         public ViewHolder(View v) {
             super(v);
-            partyName = v.findViewById(R.id.partyName);
+            partyName = v.findViewById(R.id.userName);
             date = v.findViewById(R.id.dateView);
         }
     }

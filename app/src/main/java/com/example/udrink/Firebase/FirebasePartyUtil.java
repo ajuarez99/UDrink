@@ -27,13 +27,13 @@ public class FirebasePartyUtil {
         db = FirebaseFirestore.getInstance();
     }
 
-    public void addParty(Party party, FireStorePartyCallback callback){
+    public void addParty(final Party party){
 
-        db.collection("party").add(party)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        db.collection("party").document(party.getPartyName()).set(party)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "Party written with ID: " + party.getPartyName());
 
                     }
                 })
@@ -45,7 +45,29 @@ public class FirebasePartyUtil {
                 });
 
     }
-    public interface FireStorePartyCallback{
 
+    public void getParty(final String pid, final FireStorePartyCallback callback) {
+        db.collection("party").document(pid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.exists()) {
+                        callback.partyFound(doc);
+                    }
+                    else {
+                        Log.d(TAG, "No such document");
+                        callback.partyMissing(pid);
+                    }
+                }
+                else
+                    Log.d(TAG, "Party get failed with ", task.getException());
+            }
+        });
+    }
+
+    public interface FireStorePartyCallback{
+        abstract void partyFound(DocumentSnapshot party);
+        abstract void partyMissing(String pid);
     }
 }
