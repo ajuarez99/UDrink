@@ -95,16 +95,16 @@ public class HomeFragment extends Fragment {
                 inputBeer.setHint("Name of Alcohol");
                 inputBeer.setInputType(InputType.TYPE_CLASS_TEXT );
 
-                final EditText inputBAC = new EditText(getContext());
-                inputBAC.setHint("Name of ABV");
-                inputBAC.setInputType(InputType.TYPE_CLASS_NUMBER );
+                final EditText inputABV = new EditText(getContext());
+                inputABV.setHint("% of Alcohol");
+                inputABV.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
                 final EditText inputOunces = new EditText(getContext());
                 inputOunces.setHint("# of Ounces");
                 inputOunces.setInputType(InputType.TYPE_CLASS_NUMBER );
 
                 lp.addView(inputBeer);
-                lp.addView(inputBAC);
+                lp.addView(inputABV);
                 lp.addView(inputOunces);
                 builder.setView(lp);
 
@@ -114,7 +114,7 @@ public class HomeFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
                         Date date = new Date(System.currentTimeMillis());
-                        Drink drink = new Drink(inputBeer.getText().toString(),date,Integer.parseInt(inputBAC.getText().toString()), Integer.parseInt(inputOunces.getText().toString()));
+                        Drink drink = new Drink(inputBeer.getText().toString(),date,Double.parseDouble(inputABV.getText().toString()), Integer.parseInt(inputOunces.getText().toString()));
 
                         final FirebaseUsersUtil firebaseUtil = new FirebaseUsersUtil();
                         firebaseUtil.addDrinkToUser(uid, drink);

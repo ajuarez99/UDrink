@@ -6,14 +6,14 @@ public class Drink {
     private String DrinkName;
     private String uid;
     private Date DrankAt;
-    private int BAC;
+    private double ABV;
     private int Ounces;
 
-    public Drink(String drinkName, Date drankAt, int BAC, int ounces) {
+    public Drink(String drinkName, Date drankAt, double ABV, int ounces) {
         DrinkName = drinkName;
         this.uid = uid;
         DrankAt = drankAt;
-        this.BAC = BAC;
+        this.ABV = ABV;
         Ounces = ounces;
     }
     public Drink(){
@@ -23,7 +23,7 @@ public class Drink {
         this.DrinkName = drink.DrinkName;
         this.uid = uid;
         this.DrankAt = drink.DrankAt;
-        this.BAC = drink.BAC;
+        this.ABV = drink.ABV;
         this.Ounces = drink.Ounces;
     }
     public String getDrinkName() {
@@ -50,12 +50,12 @@ public class Drink {
         DrankAt = drankAt;
     }
 
-    public int getABV() {
-        return BAC;
+    public double getABV() {
+        return ABV;
     }
 
-    public void setABV(int BAC) {
-        this.BAC = BAC;
+    public void setABV(double ABV) {
+        this.ABV = ABV;
     }
 
     public int getOunces() {

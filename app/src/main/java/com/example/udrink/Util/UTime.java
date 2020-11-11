@@ -1,11 +1,8 @@
 package com.example.udrink.Util;
 
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
-
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.Date;
 
 public class UTime {
@@ -13,38 +10,36 @@ public class UTime {
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public String getTimeAgo(Date dateAt){
         Date now = new Date(System.currentTimeMillis());
         Long difference = now.getTime() - dateAt.getTime();
         Long days  = (difference / (1000*60*60*24));
-        LocalDate stuff = dateAt.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-        if (days < 7 && days > 1){
+        if (days < 7 && days >= 1){
             return days.toString() + "d";
         }
         else if(days >= 7 ){
             try {
-                return (dateAt.getMonth() +1) +"/" + stuff.getDayOfMonth() +"/" + (dateAt.getYear() -100);
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(dateAt);
+                return (cal.get(Calendar.MONTH) + 1) +"/" + (cal.get(Calendar.DAY_OF_MONTH)) +"/" + (cal.get(Calendar.YEAR));
             }catch ( Exception e) {
                 return "";
             }
         }
+        else {
+            long minute = (difference / (1000 * 60)) % 60;
+            long hour = (difference / (1000 * 60 * 60)) % 24;
+            if (hour < 24 && hour > 1) {
+                return hour + "h";
+            } else if (hour < 1 && minute >= 1) {
+                return minute + "m";
+            } else if (minute < 1) {
 
-        long minute = (difference / (1000 * 60)) % 60;
-        long hour = (difference / (1000 * 60 * 60)) % 24;
-        if(hour < 24 && hour > 1){
-            long day  = hour /24;
-            return String.valueOf(hour)+"h";
+                long second = (difference / 1000) % 60;
+                return second + "s";
+            }
+            return "now";
         }
-        else if( hour < 1 && minute >= 1){
-            return String.valueOf(minute) +"m";
-        }
-        else if (minute < 1){
-
-            long second = (difference / 1000) % 60;
-            return String.valueOf(second) + "s";
-        }
-        return "now";
     }
 }
