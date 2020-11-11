@@ -28,6 +28,7 @@ import com.example.udrink.Models.User;
 import com.example.udrink.R;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -35,6 +36,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
@@ -210,13 +213,15 @@ public class PartyFragment extends Fragment {
         setPartyView();
     }
 
-    private void leaveParty(String pid) {
-        fPU.getParty(pid, new FirebasePartyUtil.FireStorePartyCallback() {
+    private void leaveParty(String partyId) {
+        fPU.getParty(partyId, new FirebasePartyUtil.FireStorePartyCallback() {
             @Override
             public void partyFound(DocumentSnapshot party) {
                 DocumentReference userParty = party.getReference();
                 userParty.update("members", FieldValue.arrayRemove(uid));
                 updateUser(null, null);
+                pid = null;
+                partyName = null;
                 ArrayList<String> members = (ArrayList<String>) party.get("members");
                 if(members.size() == 1) {
                     userParty.update("activeParty", false);
@@ -232,6 +237,14 @@ public class PartyFragment extends Fragment {
 
     private void updateUser(String pid, String partyName) {
         DocumentReference user = db.collection("users").document(uid);
+        //Add party to user history when leaving
+        if(pid == null) {
+            Map<String, Object> data = new HashMap<>();
+            data.put("name", this.partyName);
+            data.put("date", FieldValue.serverTimestamp());
+            CollectionReference history = user.collection("partyHistory");
+            history.document(this.pid).set(data);
+        }
         user.update("pid", pid);
         user.update("partyName", partyName);
     }
@@ -259,8 +272,6 @@ public class PartyFragment extends Fragment {
         et2.setVisibility(View.VISIBLE);
         if(adapter != null)
             adapter.stopListening();
-        this.pid = null;
-        this.partyName = null;
     }
 
     private void createAlert(String message) {
@@ -299,10 +310,6 @@ public class PartyFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-    }
-    @Override
     public void onStop() {
         super.onStop();
         if(adapter != null)
@@ -318,8 +325,6 @@ public class PartyFragment extends Fragment {
             bacValue = itemView.findViewById(R.id.bac_value);
             name = itemView.findViewById(R.id.userName);
         }
-
-
     }
 
 }

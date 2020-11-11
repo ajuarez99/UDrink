@@ -11,15 +11,18 @@ public class User {
     private int inches;
     private String pid;
     private String partyName;
-    private ArrayList<String> partyHistory = new ArrayList<>();
     private List<Drink> drinks;
+
     public User() {
 
     }
-    public User(int weight, int feet, int inches){
+
+    public User(int weight, int feet, int inches) {
         this.weight = weight;
         this.feet = feet;
         this.inches = inches;
+        this.pid = null;
+        this.partyName = null;
     }
 
     public List<Drink> getDrinks() {
@@ -115,6 +118,7 @@ public class User {
     public void setPartyName(String partyName) {
         this.partyName = partyName;
     }
+
 
     public void copyUser(User copy){
         if(copy != null){
