@@ -9,7 +9,8 @@ public class User {
     private int weight;
     private int feet;
     private int inches;
-    private String currentParty;
+    private String pid;
+    private String partyName;
     private ArrayList<String> partyHistory = new ArrayList<>();
     private List<Drink> drinks;
     public User() {
@@ -54,7 +55,8 @@ public class User {
     public User(String uid, String name) {
         this.uid = uid;
         this.name = name;
-        this.currentParty = null;
+        this.pid = null;
+        this.partyName = null;
     }
 
 
@@ -98,12 +100,20 @@ public class User {
         this.name = name;
     }
 
-    public String getCurrentParty() {
-        return currentParty;
+    public String getPid() {
+        return pid;
     }
 
-    public void setCurrentParty(String partyId) {
-        this.currentParty = partyId;
+    public void setPid(String partyId) {
+        this.pid = partyId;
+    }
+
+    public String getPartyName() {
+        return partyName;
+    }
+
+    public void setPartyName(String partyName) {
+        this.partyName = partyName;
     }
 
     public void copyUser(User copy){
@@ -116,6 +126,5 @@ public class User {
         }
 
     }
-
 
 }

@@ -18,11 +18,6 @@ public class Party {
     public Party() {
 
     }
-    public Party(String partyName, boolean activeParty) {
-        this.partyName = partyName;
-        this.activeParty = activeParty;
-        this.startTime = new Date(System.currentTimeMillis());
-    }
 
     public Party(String partyName){
         this.partyName = partyName;
@@ -31,11 +26,6 @@ public class Party {
         this.members = new ArrayList<String>();
     }
 
-    public Party(String name, Location location) {
-        partyName = name;
-        currentLocation = location;
-        startTime = new Date(System.currentTimeMillis());
-    }
 
     public Date getStartTime() {
         return startTime;

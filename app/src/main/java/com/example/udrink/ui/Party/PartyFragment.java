@@ -1,7 +1,6 @@
 package com.example.udrink.ui.Party;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -9,7 +8,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -36,7 +35,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
+import java.util.Random;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
 import static com.example.udrink.MainActivity.UDRINK_SETTINGS;
 import static com.example.udrink.MainActivity.UDRINK_UID;
@@ -51,7 +52,7 @@ public class PartyFragment extends Fragment {
     private EditText et1, et2;
     private FirestoreRecyclerAdapter adapter;
     private String uid;
-    private String pid;
+    private String pid, partyName;
     private User temp;
     private View view;
     private FirebaseUsersUtil fUU;
@@ -69,9 +70,9 @@ public class PartyFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.party_fragment, container, false);
+        context = getContext();
         final SharedPreferences settings = getActivity().getSharedPreferences(UDRINK_SETTINGS, MODE_PRIVATE);
         uid = settings.getString(UDRINK_UID, "");
-        //pid = settings.getString("pid", "");
         db = FirebaseFirestore.getInstance();
         fUU = new FirebaseUsersUtil();
         fPU = new FirebasePartyUtil();
@@ -85,75 +86,36 @@ public class PartyFragment extends Fragment {
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    String partyName = et1.getText().toString();
-                    et1.getText().clear();
-                if (!partyName.equals("")) {
-                    fPU.getParty(partyName, new FirebasePartyUtil.FireStorePartyCallback() {
-                        @Override
-                        public void partyFound(DocumentSnapshot party) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                            builder.setMessage("Party name taken").setTitle("Sorry");
-                            builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    dialogInterface.dismiss();
-                                }
-                            });
-                            AlertDialog dialog = builder.create();
-                            dialog.show();
-                        }
-
-                        @Override
-                        public void partyMissing(String pid) {
-                            addParty(pid);
-                            setView();
-                        }
-                    });
-                }
+                String partyName = et1.getText().toString();
+                et1.getText().clear();
+                //Hide keyboard
+                InputMethodManager imm = (InputMethodManager) context.getSystemService(INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(et1.getWindowToken(), 0);
+                if (!partyName.equals(""))
+                    generatePIDandAddParty(partyName);
             }
         });
 
         join.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                String partyName = et2.getText().toString();
+                String pidToJoin = et2.getText().toString().toUpperCase();
                 et2.getText().clear();
-                if (!partyName.equals("")) {
-                    fPU.getParty(partyName, new FirebasePartyUtil.FireStorePartyCallback() {
+                InputMethodManager imm = (InputMethodManager) context.getSystemService(INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(et2.getWindowToken(), 0);
+                if (!pidToJoin.equals("")) {
+                    fPU.getParty(pidToJoin, new FirebasePartyUtil.FireStorePartyCallback() {
                         @Override
                         public void partyFound(DocumentSnapshot party) {
-                            if ((boolean) party.get("activeParty") == true) {
-                                party.getReference().update("members", FieldValue.arrayUnion(uid));
-                                pid = (String) party.get("partyName");
-                                db.collection("users").document(uid).update("partyId", pid);
-                                setView();
-                            } else {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                                builder.setMessage("Party not found").setTitle("Sorry");
-                                builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        dialogInterface.dismiss();
-                                    }
-                                });
-                                AlertDialog dialog = builder.create();
-                                dialog.show();
-                            }
+                            if ((boolean) party.get("activeParty") == true)
+                                joinParty(party);
+                            else
+                                createAlert("Party not found");
                         }
 
                         @Override
                         public void partyMissing(String pid) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                            builder.setMessage("Party not found").setTitle("Sorry");
-                            builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    dialogInterface.dismiss();
-                                }
-                            });
-                            AlertDialog dialog = builder.create();
-                            dialog.show();
+                            createAlert("Party not found");
                         }
                     });
                 }
@@ -179,20 +141,13 @@ public class PartyFragment extends Fragment {
 
             @Override
             public void getUserCallback(DocumentSnapshot user) {
-                if(user.get("partyId") == null) {
-                    partyRview.setVisibility(View.GONE);
-                    leave.setVisibility(View.GONE);
-                    pName.setVisibility(View.GONE);
+                if(user.get("pid") == null) {
+                    setJoinView();
                 }
                 else {
-                    pid = user.get("partyId").toString();
-                    pName.setText(pid);
-                    create.setVisibility(View.GONE);
-                    join.setVisibility(View.GONE);
-                    et1.setVisibility(View.GONE);
-                    et2.setVisibility(View.GONE);
-                    setPartyFeed();
-                    adapter.startListening();
+                    pid = user.get("pid").toString();
+                    partyName = user.get("partyName").toString();
+                    setPartyView();
                 }
             }
 
@@ -206,10 +161,9 @@ public class PartyFragment extends Fragment {
     }
 
     private void setPartyFeed(){
-        //TODO: Change this to filter based on partyId
 
             Query query = FirebaseFirestore.getInstance()
-                    .collection("users").whereEqualTo("partyId", pid);
+                    .collection("users").whereEqualTo("pid", pid);
 
             FirestoreRecyclerOptions<User> options = new FirestoreRecyclerOptions.Builder<User>()
                     .setQuery(query, User.class).build();
@@ -237,47 +191,55 @@ public class PartyFragment extends Fragment {
             partyRview.setAdapter(adapter);
     }
 
-    private void addParty(String pid) {
-        Party toAdd = new Party(pid);
+    private void addParty(String partyName, String pid) {
+        Party toAdd = new Party(partyName);
         toAdd.addMember(uid);
-        db.collection("users").document(uid).update("partyId", pid);
-        fPU.addParty(toAdd);
+        fPU.addParty(toAdd, pid);
         this.pid = pid;
+        this.partyName = partyName;
+        updateUser(pid, partyName);
+        setPartyView();
     }
+
+    private void joinParty(DocumentSnapshot party) {
+        DocumentReference partyRef = party.getReference();
+        partyRef.update("members", FieldValue.arrayUnion(uid));
+        this.pid = partyRef.getId();
+        this.partyName = party.get("partyName").toString();
+        updateUser(pid, partyName);
+        setPartyView();
+    }
+
     private void leaveParty(String pid) {
         fPU.getParty(pid, new FirebasePartyUtil.FireStorePartyCallback() {
             @Override
             public void partyFound(DocumentSnapshot party) {
                 DocumentReference userParty = party.getReference();
                 userParty.update("members", FieldValue.arrayRemove(uid));
-                db.collection("users").document(uid).update("partyId", null);
+                updateUser(null, null);
                 ArrayList<String> members = (ArrayList<String>) party.get("members");
                 if(members.size() == 1) {
                     userParty.update("activeParty", false);
                 }
             }
-
             @Override
             public void partyMissing(String pid) {
-
+                //Party should never be null if User is leaving party
             }
         });
-        partyRview.setVisibility(View.GONE);
-        leave.setVisibility(View.GONE);
-        pName.setVisibility(View.GONE);
-        create.setVisibility(View.VISIBLE);
-        join.setVisibility(View.VISIBLE);
-        et1.setVisibility(View.VISIBLE);
-        et2.setVisibility(View.VISIBLE);
-        adapter.stopListening();
-        this.pid = null;
+        setJoinView();
     }
 
-    private void setView() {
+    private void updateUser(String pid, String partyName) {
+        DocumentReference user = db.collection("users").document(uid);
+        user.update("pid", pid);
+        user.update("partyName", partyName);
+    }
 
+    private void setPartyView() {
         partyRview.setVisibility(View.VISIBLE);
         pName.setVisibility(View.VISIBLE);
-        pName.setText(pid);
+        pName.setText(partyName + ": " + pid);
         create.setVisibility(View.GONE);
         join.setVisibility(View.GONE);
         et1.setVisibility(View.GONE);
@@ -285,6 +247,55 @@ public class PartyFragment extends Fragment {
         leave.setVisibility(View.VISIBLE);
         setPartyFeed();
         adapter.startListening();
+    }
+
+    private void setJoinView(){
+        partyRview.setVisibility(View.GONE);
+        leave.setVisibility(View.GONE);
+        pName.setVisibility(View.GONE);
+        create.setVisibility(View.VISIBLE);
+        join.setVisibility(View.VISIBLE);
+        et1.setVisibility(View.VISIBLE);
+        et2.setVisibility(View.VISIBLE);
+        if(adapter != null)
+            adapter.stopListening();
+        this.pid = null;
+        this.partyName = null;
+    }
+
+    private void createAlert(String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(message).setTitle("Sorry");
+        builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void generatePIDandAddParty(final String partyName) {
+        char[] acceptable = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+        StringBuilder build = new StringBuilder(4);
+        Random random = new Random();
+        for(int i = 0; i < 4; i++) {
+            char c = acceptable[random.nextInt(acceptable.length)];
+            build.append(c);
+        }
+        String pid = build.toString();
+        fPU.checkPartyExistence(pid, new FirebasePartyUtil.FireStorePartyCallback() {
+            @Override
+            public void partyFound(DocumentSnapshot party) {
+                generatePIDandAddParty(partyName);
+            }
+
+            @Override
+            public void partyMissing(String pid) {
+                addParty(partyName, pid);
+            }
+        });
     }
 
     @Override
@@ -310,22 +321,5 @@ public class PartyFragment extends Fragment {
 
 
     }
-
-    public class PartyNameTakenDialog extends DialogFragment {
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the Builder class for convenient dialog construction
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage("Party name taken. Please choose another name.")
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dismiss();
-                        }
-                    });
-            // Create the AlertDialog object and return it
-            return builder.create();
-        }
-    }
-
 
 }

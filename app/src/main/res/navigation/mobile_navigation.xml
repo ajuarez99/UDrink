@@ -26,6 +26,4 @@
         android:name="com.example.udrink.ui.Profile.ProfileFragment"
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile" />
-    <navigation
-        android:id="@+id/navigation2" />
 </navigation>
