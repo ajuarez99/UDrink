@@ -22,6 +22,7 @@ import androidx.annotation.RequiresApi;
 import androidx.core.graphics.drawable.IconCompatParcelizer;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -53,6 +54,9 @@ public class ProfileFragment extends Fragment {
 
     private static String uid;
     private FirebaseFirestore db;
+    private TextView heightView;
+    private TextView weightView;
+
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -63,8 +67,10 @@ public class ProfileFragment extends Fragment {
 
         final TextView nameView = root.findViewById(R.id.nameTextView);
         final ImageView profileImage = root.findViewById(R.id.profileImage);
-        final TextView heightView = root.findViewById(R.id.heightView);
-        final TextView weightView = root.findViewById(R.id.weightView);
+//        final TextView heightView = root.findViewById(R.id.heightView);
+//        final TextView weightView = root.findViewById(R.id.weightView);
+        heightView = root.findViewById(R.id.heightView);
+        weightView = root.findViewById(R.id.weightView);
 
         db = FirebaseFirestore.getInstance();
 
@@ -73,43 +79,68 @@ public class ProfileFragment extends Fragment {
 
         FirebaseUsersUtil util = new FirebaseUsersUtil();
 
-        final DocumentReference docRef = db.collection("users").document(uid);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//        final DocumentReference docRef = db.collection("users").document(uid);
+//        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    DocumentSnapshot document = task.getResult();
+//                    if (document.exists()) {
+//                        String name = (String) document.get("name");
+//                        long feet = (long) document.get("feet");
+//                        long inches = (long) document.get("inches");
+//                        long weight = (long) document.get("weight");
+//                        nameView.setText(name);
+//                        heightView.setText(getResources().getString(R.string.height, feet, inches));
+//                        weightView.setText(getResources().getString(R.string.weight, weight));
+//                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+//                    } else {
+//                        Log.d(TAG, "No such document");
+//                    }
+//                } else {
+//                    Log.d(TAG, "get failed with ", task.getException());
+//                }
+//            }
+//        });
+
+//        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+//                weightView.setText(getResources().getString(R.string.weight, (long) value.get("weight")));
+//            }
+//        });
+//
+//        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+//                heightView.setText(getResources().getString(R.string.height, (long) value.get("feet"), (long) value.get("inches")));
+//            }
+//        });
+        util.findUserById(uid, new FirebaseUsersUtil.FireStoreUserCallback() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        String name = (String) document.get("name");
-                        long feet = (long) document.get("feet");
-                        long inches = (long) document.get("inches");
-                        long weight = (long) document.get("weight");
-                        nameView.setText(name);
-                        heightView.setText(getResources().getString(R.string.height, feet, inches));
-                        weightView.setText(getResources().getString(R.string.weight, weight));
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                    } else {
-                        Log.d(TAG, "No such document");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
+            public void newUserCallBack(DocumentSnapshot user) {
+
+            }
+
+            @Override
+            public void getUserCallback(DocumentSnapshot user) {
+                String name = (String) user.get("name");
+                long feet = (long) user.get("feet");
+                long inches = (long) user.get("inches");
+                long weight = (long) user.get("weight");
+                nameView.setText(name);
+                heightView.setText(getResources().getString(R.string.height, feet, inches));
+                weightView.setText(getResources().getString(R.string.weight, weight));
+                Log.d(TAG, "DocumentSnapshot data: " + user.getData());
+            }
+
+            @Override
+            public void getUserDrinks(DocumentSnapshot drinks) {
+
             }
         });
 
-        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                weightView.setText(getResources().getString(R.string.weight, (long) value.get("weight")));
-            }
-        });
 
-        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                heightView.setText(getResources().getString(R.string.height, (long) value.get("feet"), (long) value.get("inches")));
-            }
-        });
 
         profileImage.setImageResource(R.drawable.circle);
 
@@ -134,6 +165,7 @@ public class ProfileFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getContext());
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
 
         return root;
@@ -153,9 +185,12 @@ public class ProfileFragment extends Fragment {
                         long weight;
                         try {
                             weight = Long.parseLong(weightText.getText().toString());
-                            data.put("weight", weight);
-                            final DocumentReference docRef = db.collection("users").document(uid);
-                            docRef.set(data,SetOptions.merge());
+//                            data.put("weight", weight);
+//                            final DocumentReference docRef = db.collection("users").document(uid);
+//                            docRef.set(data,SetOptions.merge());
+                            DocumentReference docRef = db.collection("users").document(uid);
+                            docRef.update("weight", weight);
+                            weightView.setText(getResources().getString(R.string.weight, weight));
                         } catch (Exception e) {
                             Log.d(TAG, "onClick: " + e);
                         }
@@ -188,10 +223,13 @@ public class ProfileFragment extends Fragment {
                         try {
                             feet = Long.parseLong(feetText.getText().toString());
                             inches = Long.parseLong(inchesText.getText().toString());
-                            data.put("feet", feet);
-                            data.put("inches", inches);
-                            final DocumentReference docRef = db.collection("users").document(uid);
-                            docRef.set(data,SetOptions.merge());
+//                          data.put("feet", feet);
+//                          data.put("inches", inches);
+//                          final DocumentReference docRef = db.collection("users").document(uid);
+//                          docRef.set(data,SetOptions.merge());
+                            DocumentReference docRef = db.collection("users").document(uid);
+                            docRef.update("feet", feet, "inches", inches);
+                            heightView.setText(getResources().getString(R.string.height, feet, inches));
                         } catch (Exception e){
                             Log.d(TAG, "onClick: " + e);
                         }

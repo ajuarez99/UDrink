@@ -9,6 +9,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +22,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 
+import com.example.udrink.Adapters.PartyFeedAdapter;
 import com.example.udrink.Firebase.FirebasePartyUtil;
 import com.example.udrink.Firebase.FirebaseUsersUtil;
 import com.example.udrink.Models.Party;
@@ -134,6 +136,7 @@ public class PartyFragment extends Fragment {
 
         partyRview = view.findViewById(R.id.user_recycler);
         partyRview.setLayoutManager(new LinearLayoutManager(context));
+        partyRview.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
         //TODO: Change this to navigate to different fragment
         fUU.findUserById(uid, new FirebaseUsersUtil.FireStoreUserCallback() {
@@ -171,26 +174,7 @@ public class PartyFragment extends Fragment {
             FirestoreRecyclerOptions<User> options = new FirestoreRecyclerOptions.Builder<User>()
                     .setQuery(query, User.class).build();
 
-            adapter = new FirestoreRecyclerAdapter<User, ViewHolder>(options) {
-                @Override
-                public void onBindViewHolder(ViewHolder holder, int position, User model) {
-                    // - get element from your dataset at this position
-                    // - replace the contents of the view with that element
-                    holder.name.setText(model.getName());
-                }
-
-                @Override
-                public ViewHolder onCreateViewHolder(ViewGroup group, int i) {
-                    // Using a custom layout called R.layout.message for each item, we create a new instance of the viewholder
-                    LayoutInflater inflater = LayoutInflater.from(
-                            group.getContext());
-                    View v = inflater.inflate(R.layout.recyclerview_party_item, group, false);
-                    // set the view's size, margins, paddings and layout parameters
-                    ViewHolder vh = new ViewHolder(v);
-                    return vh;
-                }
-            };
-
+            adapter = new PartyFeedAdapter(options);
             partyRview.setAdapter(adapter);
     }
 
@@ -314,17 +298,6 @@ public class PartyFragment extends Fragment {
         super.onStop();
         if(adapter != null)
             adapter.stopListening();
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder{
-        TextView bacValue;
-        TextView name;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            bacValue = itemView.findViewById(R.id.bac_value);
-            name = itemView.findViewById(R.id.userName);
-        }
     }
 
 }

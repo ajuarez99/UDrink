@@ -111,8 +111,5 @@ Move these to drinks util class later along with getUserDrinks interface
                 });
     }
 
-    public void updateUserPIDandPartyName(String pid, String partyName){
-
-    }
 
 }
