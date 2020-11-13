@@ -1,5 +1,6 @@
 package com.example.udrink.Firebase;
 
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import static android.service.controls.ControlsProviderService.TAG;
 
@@ -26,9 +30,11 @@ public class FirebaseUsersUtil {
     private String id;
 
     FirebaseFirestore db;
+    FirebaseStorage st;
 
     public FirebaseUsersUtil() {
         db = FirebaseFirestore.getInstance();
+        st = FirebaseStorage.getInstance();
     }
 
     public void writeNewUser(User userInfo) {
@@ -111,5 +117,28 @@ Move these to drinks util class later along with getUserDrinks interface
                 });
     }
 
+    public void uploadUserProfilePic(final String uid, Uri uri) {
+        final StorageReference picture = st.getReference(uid).child(uri.getLastPathSegment());
+        picture.putFile(uri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                if(task.isSuccessful()) {
+                    Log.d("Profile", "Upload Successful");
+                    picture.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            if(task.isSuccessful()) {
+                                db.collection("users").document(uid)
+                                        .update("profilePicture", task.getResult().toString());
+                            }
+                        }
+                    });
+                }
+
+                else
+                    Log.d("Profile", "Upload Failed");
+            }
+        });
+    }
 
 }

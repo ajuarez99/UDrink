@@ -11,6 +11,7 @@ public class User {
     private int inches;
     private String pid;
     private String partyName;
+    private String profilePicture;
     private List<Drink> drinks;
 
     public User() {
@@ -23,6 +24,7 @@ public class User {
         this.inches = inches;
         this.pid = null;
         this.partyName = null;
+        this.profilePicture = null;
     }
 
     public List<Drink> getDrinks() {
@@ -117,6 +119,14 @@ public class User {
 
     public void setPartyName(String partyName) {
         this.partyName = partyName;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
 

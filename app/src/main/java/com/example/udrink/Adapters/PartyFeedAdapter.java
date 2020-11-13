@@ -9,6 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.udrink.Models.Drink;
 import com.example.udrink.Models.Party;
 import com.example.udrink.Models.User;
@@ -20,16 +22,20 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class PartyFeedAdapter extends FirestoreRecyclerAdapter<User, PartyFeedAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView bacValue;
         TextView name;
+        CircleImageView profilePic;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             bacValue = itemView.findViewById(R.id.bac_value);
             name = itemView.findViewById(R.id.userName);
+            profilePic = itemView.findViewById(R.id.pic);
         }
     }
 
@@ -39,8 +45,13 @@ public class PartyFeedAdapter extends FirestoreRecyclerAdapter<User, PartyFeedAd
 
     @Override
     protected void onBindViewHolder(@NonNull PartyFeedAdapter.ViewHolder holder, int position, @NonNull User model) {
-
         holder.name.setText(model.getName());
+        if(model.getProfilePicture() != null)
+            Glide.with(holder.itemView).load(model.getProfilePicture())
+                    .into(holder.profilePic);
+        else
+            Glide.with(holder.itemView).load(R.drawable.default_profile)
+                    .into(holder.profilePic);
     }
 
     @NonNull

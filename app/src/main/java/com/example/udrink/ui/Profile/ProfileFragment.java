@@ -1,9 +1,12 @@
 package com.example.udrink.ui.Profile;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
@@ -26,6 +29,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.udrink.Adapters.ProfileFeedAdapter;
 import com.example.udrink.Firebase.FirebaseUsersUtil;
 import com.example.udrink.R;
@@ -41,9 +45,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.content.Context.MODE_PRIVATE;
 import static android.service.controls.ControlsProviderService.TAG;
@@ -54,8 +63,12 @@ public class ProfileFragment extends Fragment {
 
     private static String uid;
     private FirebaseFirestore db;
+    private FirebaseStorage storage;
     private TextView heightView;
     private TextView weightView;
+    private CircleImageView profilePic;
+    private static final int REQUEST_IMAGE = 2;
+    FirebaseUsersUtil util;
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -66,18 +79,20 @@ public class ProfileFragment extends Fragment {
         final View root = inflater.inflate(R.layout.fragment_profile, container, false);
 
         final TextView nameView = root.findViewById(R.id.nameTextView);
-        final ImageView profileImage = root.findViewById(R.id.profileImage);
+//        final ImageView profileImage = root.findViewById(R.id.profileImage);
 //        final TextView heightView = root.findViewById(R.id.heightView);
 //        final TextView weightView = root.findViewById(R.id.weightView);
+        profilePic = root.findViewById(R.id.pic);
         heightView = root.findViewById(R.id.heightView);
         weightView = root.findViewById(R.id.weightView);
 
         db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
 
         SharedPreferences settings = getActivity().getSharedPreferences(UDRINK_SETTINGS, MODE_PRIVATE);
         uid = settings.getString(UDRINK_UID, "");
 
-        FirebaseUsersUtil util = new FirebaseUsersUtil();
+        util = new FirebaseUsersUtil();
 
 //        final DocumentReference docRef = db.collection("users").document(uid);
 //        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -124,6 +139,11 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void getUserCallback(DocumentSnapshot user) {
+                if(user.get("profilePicture") != null)
+                    Glide.with(ProfileFragment.this).load(user.get("profilePicture").toString()).into(profilePic);
+                else
+                    Glide.with(ProfileFragment.this).load(R.drawable.default_profile)
+                            .into(profilePic);
                 String name = (String) user.get("name");
                 long feet = (long) user.get("feet");
                 long inches = (long) user.get("inches");
@@ -141,8 +161,16 @@ public class ProfileFragment extends Fragment {
         });
 
 
-
-        profileImage.setImageResource(R.drawable.circle);
+//        profileImage.setImageResource(R.drawable.circle);
+        profilePic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("image/*");
+                startActivityForResult(intent, REQUEST_IMAGE);
+            }
+        });
 
         heightView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -230,7 +258,7 @@ public class ProfileFragment extends Fragment {
                             DocumentReference docRef = db.collection("users").document(uid);
                             docRef.update("feet", feet, "inches", inches);
                             heightView.setText(getResources().getString(R.string.height, feet, inches));
-                        } catch (Exception e){
+                        } catch (Exception e) {
                             Log.d(TAG, "onClick: " + e);
                         }
                     }
@@ -238,4 +266,20 @@ public class ProfileFragment extends Fragment {
                 .create();
         dialog.show();
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
+
+        if (requestCode == REQUEST_IMAGE && resultCode == Activity.RESULT_OK) {
+            if(data != null) {
+                final Uri uri = data.getData();
+                Log.d(TAG, "Uri: " + uri.toString());
+                util.uploadUserProfilePic(uid, uri);
+                Glide.with(this).load(uri).into(profilePic);
+            }
+        }
+    }
+
 }
