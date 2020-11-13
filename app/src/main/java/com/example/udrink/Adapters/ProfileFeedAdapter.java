@@ -11,8 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.udrink.Models.Party;
 import com.example.udrink.Models.User;
 import com.example.udrink.R;
+import com.example.udrink.Util.UTime;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ProfileFeedAdapter extends RecyclerView.Adapter<ProfileFeedAdapter.ViewHolder>{
 
@@ -41,6 +44,10 @@ public class ProfileFeedAdapter extends RecyclerView.Adapter<ProfileFeedAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.partyName.setText(mDataset.get(position).getPartyName());
+        UTime time = new UTime();
+        Date date = new Date();
+        date.setTime(50000);
+        holder.date.setText(time.getTimeAgo(date));
     }
 
     @Override
