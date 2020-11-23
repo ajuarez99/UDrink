@@ -32,9 +32,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.udrink.Adapters.ProfileFeedAdapter;
 import com.example.udrink.Firebase.FirebaseUsersUtil;
+import com.example.udrink.Models.Party;
+import com.example.udrink.Models.PartyHistory;
+import com.example.udrink.Models.User;
 import com.example.udrink.R;
-import com.firebase.ui.auth.data.model.User;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -44,12 +48,15 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -61,7 +68,7 @@ import static com.example.udrink.MainActivity.UDRINK_UID;
 
 public class ProfileFragment extends Fragment {
 
-    private static String uid;
+    private static String uid, pid;
     private FirebaseFirestore db;
     private FirebaseStorage storage;
     private TextView heightView;
@@ -79,9 +86,6 @@ public class ProfileFragment extends Fragment {
         final View root = inflater.inflate(R.layout.fragment_profile, container, false);
 
         final TextView nameView = root.findViewById(R.id.nameTextView);
-//        final ImageView profileImage = root.findViewById(R.id.profileImage);
-//        final TextView heightView = root.findViewById(R.id.heightView);
-//        final TextView weightView = root.findViewById(R.id.weightView);
         profilePic = root.findViewById(R.id.pic);
         heightView = root.findViewById(R.id.heightView);
         weightView = root.findViewById(R.id.weightView);
@@ -94,43 +98,6 @@ public class ProfileFragment extends Fragment {
 
         util = new FirebaseUsersUtil();
 
-//        final DocumentReference docRef = db.collection("users").document(uid);
-//        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    DocumentSnapshot document = task.getResult();
-//                    if (document.exists()) {
-//                        String name = (String) document.get("name");
-//                        long feet = (long) document.get("feet");
-//                        long inches = (long) document.get("inches");
-//                        long weight = (long) document.get("weight");
-//                        nameView.setText(name);
-//                        heightView.setText(getResources().getString(R.string.height, feet, inches));
-//                        weightView.setText(getResources().getString(R.string.weight, weight));
-//                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-//                    } else {
-//                        Log.d(TAG, "No such document");
-//                    }
-//                } else {
-//                    Log.d(TAG, "get failed with ", task.getException());
-//                }
-//            }
-//        });
-
-//        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-//                weightView.setText(getResources().getString(R.string.weight, (long) value.get("weight")));
-//            }
-//        });
-//
-//        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-//                heightView.setText(getResources().getString(R.string.height, (long) value.get("feet"), (long) value.get("inches")));
-//            }
-//        });
         util.findUserById(uid, new FirebaseUsersUtil.FireStoreUserCallback() {
             @Override
             public void newUserCallBack(DocumentSnapshot user) {
@@ -152,6 +119,32 @@ public class ProfileFragment extends Fragment {
                 heightView.setText(getResources().getString(R.string.height, feet, inches));
                 weightView.setText(getResources().getString(R.string.weight, weight));
                 Log.d(TAG, "DocumentSnapshot data: " + user.getData());
+
+                if(user.get("pid") != null){
+                    pid = user.get("pid").toString();
+                }
+
+                db.collection("users").document(uid).collection("partyHistory").get()
+                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                Log.d(TAG, "onSuccess: here -------");
+                                FirestoreRecyclerOptions<PartyHistory> options = new FirestoreRecyclerOptions.Builder<com.example.udrink.Models.PartyHistory>()
+                                        .setQuery(queryDocumentSnapshots.getQuery(), PartyHistory.class).build();
+                                List<PartyHistory> parties = queryDocumentSnapshots.toObjects(PartyHistory.class);
+                                for (int i = 0; i < parties.size(); i++){
+                                    Log.d(TAG, "party: " + parties.get(i).getName());
+                                    Log.d(TAG, "date: " + parties.get(i).getDate());
+                                }
+                                // Setup RecyclerView
+                                final RecyclerView recyclerView = root.findViewById(R.id.partyFeedRecyclerView);
+                                recyclerView.setAdapter(new ProfileFeedAdapter((ArrayList<PartyHistory>) parties));
+                                recyclerView.setHasFixedSize(true);
+                                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(con);
+                                recyclerView.setLayoutManager(layoutManager);
+                                recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
+                            }
+                        });
             }
 
             @Override
@@ -185,15 +178,6 @@ public class ProfileFragment extends Fragment {
                 showChangeWeightDialog(con);
             }
         });
-
-
-        // Setup RecyclerView
-        final RecyclerView recyclerView = root.findViewById(R.id.partyFeedRecyclerView);
-        recyclerView.setAdapter(new ProfileFeedAdapter());
-        recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getContext());
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
 
         return root;

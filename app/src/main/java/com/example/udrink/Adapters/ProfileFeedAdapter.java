@@ -9,26 +9,24 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.udrink.Models.Party;
+import com.example.udrink.Models.PartyHistory;
 import com.example.udrink.Models.User;
 import com.example.udrink.R;
 import com.example.udrink.Util.UTime;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class ProfileFeedAdapter extends RecyclerView.Adapter<ProfileFeedAdapter.ViewHolder>{
 
-    private ArrayList<Party> mDataset;
+    private ArrayList<PartyHistory> mDataset;
 
-    public ProfileFeedAdapter() {
-        mDataset = new ArrayList<>();
-        ArrayList<User> users = new ArrayList<>();
-        for(int j = 0; j < 7; j++){
-            Party tempParty = new Party("Party: " + j);
-            mDataset.add(tempParty);
-        }
-
+    public ProfileFeedAdapter(ArrayList<PartyHistory> data) {
+        mDataset = data;
     }
 
     @NonNull
@@ -43,10 +41,9 @@ public class ProfileFeedAdapter extends RecyclerView.Adapter<ProfileFeedAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.partyName.setText(mDataset.get(position).getPartyName());
+        holder.partyName.setText(mDataset.get(position).getName());
         UTime time = new UTime();
-        Date date = new Date();
-        date.setTime(50000);
+        Date date = mDataset.get(position).getDate();
         holder.date.setText(time.getTimeAgo(date));
     }
 
