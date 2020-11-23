@@ -191,7 +191,7 @@ public class PartyFragment extends Fragment {
             FirestoreRecyclerOptions<User> options = new FirestoreRecyclerOptions.Builder<User>()
                     .setQuery(query, User.class).build();
 
-            adapter = new PartyFeedAdapter(options, startTime);
+            adapter = new PartyFeedAdapter(options, startTime, uid);
             partyRview.setAdapter(adapter);
     }
 

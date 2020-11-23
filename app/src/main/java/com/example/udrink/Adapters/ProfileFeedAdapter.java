@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.udrink.Models.Party;
 import com.example.udrink.Models.PartyHistory;
 import com.example.udrink.Models.User;
@@ -20,6 +21,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileFeedAdapter extends RecyclerView.Adapter<ProfileFeedAdapter.ViewHolder>{
 
@@ -45,6 +48,8 @@ public class ProfileFeedAdapter extends RecyclerView.Adapter<ProfileFeedAdapter.
         UTime time = new UTime();
         Date date = mDataset.get(position).getDate();
         holder.date.setText(time.getTimeAgo(date));
+        Glide.with(holder.itemView).load(R.drawable.default_party)
+                .into(holder.partyPic);
     }
 
     @Override
@@ -56,11 +61,13 @@ public class ProfileFeedAdapter extends RecyclerView.Adapter<ProfileFeedAdapter.
         // each data item is just a string in this case
         public TextView partyName;
         public TextView date;
+        public CircleImageView partyPic;
 
         public ViewHolder(View v) {
             super(v);
             partyName = v.findViewById(R.id.userName);
             date = v.findViewById(R.id.dateView);
+            partyPic = v.findViewById(R.id.partyPic);
         }
     }
 
