@@ -54,6 +54,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -136,6 +138,14 @@ public class ProfileFragment extends Fragment {
                                     Log.d(TAG, "party: " + parties.get(i).getName());
                                     Log.d(TAG, "date: " + parties.get(i).getDate());
                                 }
+
+                                if (parties.size() == 0){
+                                    TextView partiesLabel = root.findViewById(R.id.partiesLabel);
+                                    partiesLabel.setText("No Previous Parties");
+                                    partiesLabel.setTextSize(40);
+                                    partiesLabel.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                                }
+
                                 // Setup RecyclerView
                                 final RecyclerView recyclerView = root.findViewById(R.id.partyFeedRecyclerView);
                                 recyclerView.setAdapter(new ProfileFeedAdapter((ArrayList<PartyHistory>) parties));
