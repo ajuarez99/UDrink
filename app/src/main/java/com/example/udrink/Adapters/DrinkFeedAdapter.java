@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.udrink.Firebase.FirebaseUsersUtil;
 import com.example.udrink.Models.Drink;
 import com.example.udrink.R;
@@ -24,11 +25,14 @@ import com.google.firebase.firestore.Query;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class DrinkFeedAdapter extends FirestoreRecyclerAdapter<Drink, DrinkFeedAdapter.ViewHolder> {
     private UTime getTimeAgo;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
+        public CircleImageView drinkPic;
         public TextView beerName;
         public TextView beerABV;
         public TextView beerOunces;
@@ -42,6 +46,7 @@ public class DrinkFeedAdapter extends FirestoreRecyclerAdapter<Drink, DrinkFeedA
             beerABV = v.findViewById(R.id.bac_value);
             beerOunces = v.findViewById(R.id.ounces);
             timeAgo = v.findViewById(R.id.timeago);
+            drinkPic = v.findViewById(R.id.drinkPic);
         }
     }
 
@@ -58,6 +63,8 @@ public class DrinkFeedAdapter extends FirestoreRecyclerAdapter<Drink, DrinkFeedA
         holder.beerABV.setText(String.valueOf(model.getABV()) + "%");
         holder.beerOunces.setText(String.valueOf(model.getOunces())+ " oz.");
         holder.timeAgo.setText(getTimeAgo.getTimeAgo(model.getDrankAt()));
+        Glide.with(holder.itemView).load(R.drawable.default_bottle)
+                .into(holder.drinkPic);
     }
 
     @NonNull

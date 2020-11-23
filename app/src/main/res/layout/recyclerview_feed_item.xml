@@ -1,29 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
     android:orientation="horizontal">
 
 
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/drinkPic"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
-        android:background="@drawable/circle">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-    </FrameLayout>
+        android:layout_weight="0"
+        app:civ_border_color="@color/colorAccent"
+        app:civ_border_overlay="false"
+        app:civ_border_width="2dp" />
 
     <LinearLayout
-        android:layout_width="170dp"
+        android:layout_width="206dp"
         android:layout_height="match_parent"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="7dp"
+        android:layout_weight="0"
         android:orientation="vertical">
 
         <TextView
@@ -52,10 +53,11 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="63dp"
+        android:layout_height="98dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
+        android:layout_weight="0"
         android:gravity="right"
         android:orientation="vertical">
 

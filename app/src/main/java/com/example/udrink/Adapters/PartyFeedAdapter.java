@@ -1,16 +1,20 @@
 package com.example.udrink.Adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.udrink.MainActivity;
 import com.example.udrink.Models.Drink;
 import com.example.udrink.Models.Party;
 import com.example.udrink.Models.User;
@@ -32,6 +36,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class PartyFeedAdapter extends FirestoreRecyclerAdapter<User, PartyFeedAdapter.ViewHolder> {
 
     private Date startTime;
+    private String ownerUid;
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView bacValue;
         TextView name;
@@ -45,9 +50,11 @@ public class PartyFeedAdapter extends FirestoreRecyclerAdapter<User, PartyFeedAd
         }
     }
 
-    public PartyFeedAdapter(@NonNull FirestoreRecyclerOptions<User> options, Date partyTime) {
+    public PartyFeedAdapter(@NonNull FirestoreRecyclerOptions<User> options, Date partyTime, String uid) {
         super(options);
         this.startTime = partyTime;
+        this.ownerUid = uid;
+
     }
 
     @Override
@@ -58,23 +65,29 @@ public class PartyFeedAdapter extends FirestoreRecyclerAdapter<User, PartyFeedAd
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                        List<Drink> drinks = queryDocumentSnapshots.toObjects(Drink.class);
                        double BAC = calculateBAC(drinks, model.getWeight(), model.getGender());
-                        holder.name.setText(model.getName());
-                        holder.bacValue.setText(String.format("%.3f", BAC));
-                        if(model.getProfilePicture() != null)
+                       if(model.getUid().equals(ownerUid) && BAC >= 0.2) {
+                           // Warning for user hitting dangerous BAC
+                           new AlertDialog.Builder(holder.itemView.getContext())
+                                   .setTitle("WARNING")
+                                   .setMessage("Slow down there hotshot")
+                                   .setNeutralButton("Okay", new DialogInterface.OnClickListener() {
+                                       @Override
+                                       public void onClick(DialogInterface dialogInterface, int i) {
+                                           dialogInterface.dismiss();
+                                       }
+                                   })
+                                   .show();
+                       }
+                       holder.name.setText(model.getName());
+                       holder.bacValue.setText(String.format("%.3f", BAC));
+                       if(model.getProfilePicture() != null)
                             Glide.with(holder.itemView).load(model.getProfilePicture())
                                     .into(holder.profilePic);
-                        else
+                       else
                             Glide.with(holder.itemView).load(R.drawable.default_profile)
                                     .into(holder.profilePic);
                     }
                 });
-//        holder.name.setText(model.getName());
-//        if(model.getProfilePicture() != null)
-//            Glide.with(holder.itemView).load(model.getProfilePicture())
-//                    .into(holder.profilePic);
-//        else
-//            Glide.with(holder.itemView).load(R.drawable.default_profile)
-//                    .into(holder.profilePic);
     }
 
     @NonNull
