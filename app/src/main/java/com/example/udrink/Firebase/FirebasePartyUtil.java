@@ -59,7 +59,7 @@ public class FirebasePartyUtil {
             });
     }
     public void getAllParties(final FireStorePartyCallback callabck){
-        db.collection("party") .get()
+        db.collection("party").whereEqualTo("activeParty",true).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
