@@ -13,5 +13,8 @@
     <string name="todo">TODO</string>
     <string name="height">%1$d\' %2$d\"</string>
     <string name="weight">%1$d lbs</string>
-
+    <string-array name="Gender">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
 </resources>

@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 
 import com.example.udrink.Firebase.FirebaseUsersUtil;
 import com.example.udrink.Models.User;
@@ -103,18 +105,25 @@ public class MainActivity extends AppCompatActivity {
         inputWeight.setHint("weight(lbs)");
         inputWeight.setInputType(InputType.TYPE_CLASS_NUMBER );
 
+        final Spinner inputGender = new Spinner(MainActivity.this);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.Gender, android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        inputGender.setAdapter(adapter);
+
         lp.addView(inputFeet);
         lp.addView(inputInches);
         lp.addView(inputWeight);
+        lp.addView(inputGender);
         builder.setView(lp);
 
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                User user = new User(Integer.parseInt(inputWeight.getText().toString()),Integer.parseInt(inputFeet.getText().toString()),Integer.parseInt(inputInches.getText().toString()));
+                User user = new User(Integer.parseInt(inputWeight.getText().toString()),Integer.parseInt(inputFeet.getText().toString()),Integer.parseInt(inputInches.getText().toString()), inputGender.getSelectedItem().toString());
                 user.setUid(mFirebaseUser.getUid());
                 user.setName(mFirebaseUser.getDisplayName());
+
                 firebaseUtil.writeNewUser(user);
 
 

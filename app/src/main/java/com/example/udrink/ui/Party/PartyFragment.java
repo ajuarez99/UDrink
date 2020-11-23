@@ -30,6 +30,7 @@ import com.example.udrink.Models.User;
 import com.example.udrink.R;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -38,6 +39,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -58,6 +60,7 @@ public class PartyFragment extends Fragment {
     private FirestoreRecyclerAdapter adapter;
     private String uid;
     private String pid, partyName;
+    private Date startTime;
     private User temp;
     private View view;
     private FirebaseUsersUtil fUU;
@@ -153,6 +156,7 @@ public class PartyFragment extends Fragment {
                 else {
                     pid = user.get("pid").toString();
                     partyName = user.get("partyName").toString();
+                    startTime = ((Timestamp) user.get("drinkStartTime")).toDate();
                     setPartyView();
                 }
             }
@@ -174,7 +178,7 @@ public class PartyFragment extends Fragment {
             FirestoreRecyclerOptions<User> options = new FirestoreRecyclerOptions.Builder<User>()
                     .setQuery(query, User.class).build();
 
-            adapter = new PartyFeedAdapter(options);
+            adapter = new PartyFeedAdapter(options, startTime);
             partyRview.setAdapter(adapter);
     }
 
@@ -184,7 +188,8 @@ public class PartyFragment extends Fragment {
         fPU.addParty(toAdd, pid);
         this.pid = pid;
         this.partyName = partyName;
-        updateUser(pid, partyName);
+        this.startTime = toAdd.getStartTime();
+        updateUser(pid, partyName, startTime);
         setPartyView();
     }
 
@@ -193,7 +198,8 @@ public class PartyFragment extends Fragment {
         partyRef.update("members", FieldValue.arrayUnion(uid));
         this.pid = partyRef.getId();
         this.partyName = party.get("partyName").toString();
-        updateUser(pid, partyName);
+        this.startTime = ((Timestamp) party.get("startTime")).toDate();
+        updateUser(pid, partyName, startTime);
         setPartyView();
     }
 
@@ -203,9 +209,10 @@ public class PartyFragment extends Fragment {
             public void partyFound(DocumentSnapshot party) {
                 DocumentReference userParty = party.getReference();
                 userParty.update("members", FieldValue.arrayRemove(uid));
-                updateUser(null, null);
+                updateUser(null, null, null);
                 pid = null;
                 partyName = null;
+                startTime = null;
                 ArrayList<String> members = (ArrayList<String>) party.get("members");
                 if(members.size() == 1) {
                     userParty.update("activeParty", false);
@@ -219,7 +226,7 @@ public class PartyFragment extends Fragment {
         setJoinView();
     }
 
-    private void updateUser(String pid, String partyName) {
+    private void updateUser(String pid, String partyName, Date startTime) {
         DocumentReference user = db.collection("users").document(uid);
         //Add party to user history when leaving
         if(pid == null) {
@@ -231,6 +238,7 @@ public class PartyFragment extends Fragment {
         }
         user.update("pid", pid);
         user.update("partyName", partyName);
+        user.update("drinkStartTime", startTime);
     }
 
     private void setPartyView() {
