@@ -30,6 +30,7 @@ import com.example.udrink.Models.User;
 import com.example.udrink.R;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -37,6 +38,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -66,6 +68,7 @@ public class PartyFragment extends Fragment {
     private FirebaseUsersUtil fUU;
     private FirebasePartyUtil fPU;
     private FirebaseFirestore db;
+    public static final String UDRINK_PARTY = "partyName";
 
 
 
@@ -119,6 +122,16 @@ public class PartyFragment extends Fragment {
                                 joinParty(party);
                             else
                                 createAlert("Party not found");
+                        }
+
+                        @Override
+                        public void updatePartyLocation(DocumentSnapshot party) {
+
+                        }
+
+                        @Override
+                        public void addMarkers(Task<QuerySnapshot> task) {
+
                         }
 
                         @Override
@@ -222,6 +235,16 @@ public class PartyFragment extends Fragment {
             public void partyMissing(String pid) {
                 //Party should never be null if User is leaving party
             }
+
+            @Override
+            public void addMarkers(Task<QuerySnapshot> task) {
+
+            }
+
+            @Override
+            public void updatePartyLocation(DocumentSnapshot party) {
+
+            }
         });
         setJoinView();
     }
@@ -239,6 +262,8 @@ public class PartyFragment extends Fragment {
         user.update("pid", pid);
         user.update("partyName", partyName);
         user.update("drinkStartTime", startTime);
+
+
     }
 
     private void setPartyView() {
@@ -297,6 +322,20 @@ public class PartyFragment extends Fragment {
             @Override
             public void partyMissing(String pid) {
                 addParty(partyName, pid);
+                SharedPreferences settings = getContext().getSharedPreferences(UDRINK_SETTINGS, MODE_PRIVATE);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString(UDRINK_PARTY,pid );
+                editor.commit();
+            }
+
+            @Override
+            public void updatePartyLocation(DocumentSnapshot party) {
+
+            }
+
+            @Override
+            public void addMarkers(Task<QuerySnapshot> task) {
+
             }
         });
     }
